@@ -1,12 +1,25 @@
-# Tic Tac Toe (React + Vite)
+# ChatGPT Generated Games
 
-This project is a simple, modern Tic Tac Toe game built with React and Vite. You play as X, and the computer (O) uses a simple AI to make its moves.
+![GitHub Pages Deployment](https://github.com/kgptapps/gptgames/actions/workflows/deploy.yml/badge.svg)
+
+A collection of browser-based games built with React and Vite, including Tic Tac Toe, Fast Typing, Simon Says, and more! You can play these games [online here](https://kgptapps.github.io/gptgames/).
+
+## Games Included
+
+1. **Tic Tac Toe** - Classic game with a computer opponent
+2. **Fast Typing Game** - Test your typing speed with character highlighting
+3. **Number Guess Game** - Guess the number within a range
+4. **Image Puzzle Game** - Solve a sliding puzzle
+5. **Color Match Game** - Match colors in a memory challenge
+6. **Word Scramble Game** - Unscramble words against the clock
+7. **Memory Match Game** - Find matching pairs
+8. **Simon Says Game** - Remember and repeat color patterns
 
 ## Features
-- Clean, modern UI
-- Play against a computer with basic AI (random moves)
-- Responsive and fast
+- Clean, modern UI across all games
+- Responsive design that works on desktop and mobile
 - Built with React functional components and hooks
+- Automated deployment via GitHub Actions
 
 ## Getting Started
 
