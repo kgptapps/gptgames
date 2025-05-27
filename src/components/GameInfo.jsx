@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * GameInfo component for TicTacToe
@@ -12,24 +12,27 @@ function GameInfo({ status, gameHistory, difficulty, onSetDifficulty }) {
         <div>Draw: {gameHistory.draw}</div>
         <div>Computer (O): {gameHistory.o}</div>
       </div>
-      
+
       <div className="status">{status}</div>
-      
+
       <div className="difficulty-selector">
         <span>Difficulty:</span>
-        <button 
-          className={difficulty === 'easy' ? 'active' : ''} 
-          onClick={() => onSetDifficulty('easy')}>
+        <button
+          className={difficulty === "easy" ? "active" : ""}
+          onClick={() => onSetDifficulty("easy")}
+        >
           Easy
         </button>
-        <button 
-          className={difficulty === 'medium' ? 'active' : ''} 
-          onClick={() => onSetDifficulty('medium')}>
+        <button
+          className={difficulty === "medium" ? "active" : ""}
+          onClick={() => onSetDifficulty("medium")}
+        >
           Medium
         </button>
-        <button 
-          className={difficulty === 'hard' ? 'active' : ''} 
-          onClick={() => onSetDifficulty('hard')}>
+        <button
+          className={difficulty === "hard" ? "active" : ""}
+          onClick={() => onSetDifficulty("hard")}
+        >
           Hard
         </button>
       </div>

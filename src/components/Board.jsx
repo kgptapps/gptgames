@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Board component for TicTacToe game
@@ -12,10 +12,12 @@ function Board({ board, winLine, handleSquareClick, isThinking, winner }) {
    */
   const renderSquare = (i) => {
     const isWinningSquare = winLine && winLine.includes(i);
-    
+
     return (
       <button
-        className={`square${board[i] ? " " + board[i] : ""}${isWinningSquare ? " winning" : ""}`}
+        className={`square${board[i] ? " " + board[i] : ""}${
+          isWinningSquare ? " winning" : ""
+        }`}
         onClick={() => handleSquareClick(i)}
         disabled={Boolean(board[i]) || Boolean(winner) || isThinking}
       >

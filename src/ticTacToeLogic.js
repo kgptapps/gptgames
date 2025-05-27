@@ -49,82 +49,84 @@ export function getAvailableMoves(board) {
  */
 export function getBestMove(board, difficulty) {
   const availableMoves = getAvailableMoves(board);
-  
+
   if (availableMoves.length === 0) return -1;
-  
+
   // Easy: Just make random moves
-  if (difficulty === 'easy') {
+  if (difficulty === "easy") {
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   }
-  
+
   // Medium: Mix of strategy and randomness
-  if (difficulty === 'medium') {
+  if (difficulty === "medium") {
     // Check if computer can win in the next move
     for (const move of availableMoves) {
       const boardCopy = [...board];
-      boardCopy[move] = 'O';
+      boardCopy[move] = "O";
       const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === 'O') {
+      if (winResult && winResult.winner === "O") {
         return move;
       }
     }
-    
+
     // Check if player can win in the next move and block
     for (const move of availableMoves) {
       const boardCopy = [...board];
-      boardCopy[move] = 'X';
+      boardCopy[move] = "X";
       const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === 'X') {
+      if (winResult && winResult.winner === "X") {
         return move;
       }
     }
-    
+
     // Take center if available
     if (availableMoves.includes(4)) {
       return 4;
     }
-    
+
     // Random move
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   }
-  
+
   // Hard: Prioritize winning moves and optimal strategy
-  if (difficulty === 'hard') {
+  if (difficulty === "hard") {
     // Check if computer can win in the next move
     for (const move of availableMoves) {
       const boardCopy = [...board];
-      boardCopy[move] = 'O';
+      boardCopy[move] = "O";
       const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === 'O') {
+      if (winResult && winResult.winner === "O") {
         return move;
       }
     }
-    
+
     // Check if player can win in the next move and block
     for (const move of availableMoves) {
       const boardCopy = [...board];
-      boardCopy[move] = 'X';
+      boardCopy[move] = "X";
       const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === 'X') {
+      if (winResult && winResult.winner === "X") {
         return move;
       }
     }
-    
+
     // Take center if available
     if (availableMoves.includes(4)) {
       return 4;
     }
-    
+
     // Take corners if available
-    const corners = [0, 2, 6, 8].filter(corner => availableMoves.includes(corner));
+    const corners = [0, 2, 6, 8].filter((corner) =>
+      availableMoves.includes(corner)
+    );
     if (corners.length > 0) {
       return corners[Math.floor(Math.random() * corners.length)];
     }
-    
+
     // Take edges
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   }
-  
+
   return availableMoves[Math.floor(Math.random() * availableMoves.length)];
 }
 
@@ -137,7 +139,7 @@ export function getBestMove(board, difficulty) {
 export function computerMove(board, difficulty) {
   const move = getBestMove(board, difficulty);
   if (move === -1) return board;
-  
+
   const newBoard = [...board];
   newBoard[move] = "O";
   return newBoard;
