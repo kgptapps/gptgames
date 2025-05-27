@@ -1,6 +1,6 @@
 # Copilot Games
 
-![GitHub Pages Deployment](https://github.com/kgptapps/gptgames/actions/workflows/deploy.yml/badge.svg)
+![Build and Deploy](https://github.com/kgptapps/gptgames/actions/workflows/build.yml/badge.svg)
 
 A collection of browser-based games built with React and Vite, including Tic Tac Toe, Fast Typing, Simon Says, and more! These games were created with GitHub Copilot assistance and can be played [online here](https://kgptapps.github.io/gptgames/?v=0.1.0).
 
@@ -48,7 +48,7 @@ A collection of browser-based games built with React and Vite, including Tic Tac
 This project is automatically deployed to GitHub Pages via GitHub Actions whenever changes are pushed to the master branch.
 
 ### Automatic Deployment
-The project uses a GitHub Actions workflow defined in `.github/workflows/deploy.yml` that:
+The project uses a GitHub Actions workflow defined in `.github/workflows/build.yml` that:
 1. Builds the project
 2. Updates build information (version, timestamp)
 3. Deploys to GitHub Pages using the gh-pages branch
