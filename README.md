@@ -59,8 +59,8 @@ To deploy manually:
 npm run manual-deploy
 ```
 
-### Version Display
-The application shows its current version in the top-right corner. Click on it to see detailed build information including:
+### Build Information
+The application contains build metadata including:
 - Version number
 - Build timestamp
 - Build number
