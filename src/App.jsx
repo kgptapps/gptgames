@@ -27,10 +27,12 @@ export default function App() {
   return (
     <div>
       <header className="app-header">
-        <h1>Kannaiyan's Copilot Games</h1>
-        <span className="version-badge" onClick={toggleBuildInfo}>
-          v{version}
-        </span>
+        <div className="header-content">
+          <h1>Kannaiyan's Copilot Games</h1>
+          <span className="version-badge" onClick={toggleBuildInfo}>
+            v{version}
+          </span>
+        </div>
         {showBuildInfo && (
           <div className="build-info-modal">
             <div className="build-info-content">
