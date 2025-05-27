@@ -14,6 +14,7 @@ A collection of browser-based games built with React and Vite, including Tic Tac
 6. **Word Scramble Game** - Unscramble words against the clock
 7. **Memory Match Game** - Find matching pairs
 8. **Simon Says Game** - Remember and repeat color patterns
+9. **Snake Game** - Classic snake gameplay with responsive controls
 
 ## Features
 - Clean, modern UI across all games
@@ -66,4 +67,4 @@ The application shows its current version in the top-right corner. Click on it t
 
 ---
 
-This project was bootstrapped with [Vite](https://vitejs.dev/) and uses React.
+This project was bootstrapped with [Vite](https://vitejs.dev/) v6.3.5 and uses React v19.1.0.
