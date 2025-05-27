@@ -27,6 +27,10 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Update build info
+        run: |
+          node scripts/update-build-info.js
+
       - name: Build Project
         run: npm run build
         env:
@@ -37,3 +41,4 @@ jobs:
         with:
           name: dist
           path: dist
+          retention-days: 1
