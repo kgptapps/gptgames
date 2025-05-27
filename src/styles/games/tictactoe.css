@@ -1,5 +1,11 @@
 /* TicTacToe game styles */
-@import "../games/base.css";
+@import "../base.css";
+
+:root {
+  --ttt-board-size: 3;
+  --ttt-square-size: 100px;
+  --ttt-gap: 8px;
+}
 
 .game-container {
   display: flex;
@@ -16,22 +22,34 @@
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 8px;
+  /* Setting both grid-template-columns and grid-template-rows for a proper grid */
+  grid-template-columns: repeat(var(--ttt-board-size), var(--ttt-square-size));
+  grid-template-rows: repeat(var(--ttt-board-size), var(--ttt-square-size));
+  gap: var(--ttt-gap);
   margin-bottom: 20px;
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 4x4 override (set by parent or JS) */
+.board.size-4 {
+  --ttt-board-size: 4;
+  --ttt-square-size: 65px;
+  --ttt-gap: 35px;
 }
 
 .square {
   background: #ffffff;
   border: 2px solid #e9ecef;
   border-radius: 8px;
-  font-size: 48px;
+  font-size: calc(var(--ttt-square-size) * 0.48);
   font-weight: bold;
-  height: 100px;
+  height: var(--ttt-square-size);
   padding: 0;
   text-align: center;
-  width: 100px;
+  width: var(--ttt-square-size);
   cursor: pointer;
   color: #212529;
   transition: all 0.2s ease-in-out;
@@ -39,6 +57,12 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.size-4 .square {
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  border-width: 1px;
 }
 
 .square:hover:not(:disabled) {
@@ -237,34 +261,181 @@
   transform: translateY(1px);
 }
 
+/* These styles are now handled by the combined selector styles */
+
+.game-controls {
+  width: 100%;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.selector-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.board-size-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 6px;
+  background-color: rgba(79, 140, 255, 0.05);
+}
+
+.board-size-selector span,
+.difficulty-selector span {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #4f8cff;
+}
+
+.selector-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.selector-buttons button {
+  background-color: white;
+  color: #495057;
+  border: 2px solid #4f8cff;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+  font-weight: bold;
+  position: relative;
+}
+
+.selector-buttons button.active {
+  background-color: #4f8cff;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selector-buttons button:hover:not(:disabled) {
+  background-color: #f0f7ff;
+}
+
+.selector-buttons button:disabled {
+  opacity: 1;
+}
+
+#board-size-selector .selector-buttons button {
+  background-color: rgba(79, 140, 255, 0.1);
+}
+
+#board-size-selector .selector-buttons button:hover:not(:disabled) {
+  background-color: rgba(79, 140, 255, 0.3);
+}
+
+#board-size-selector .selector-buttons button.active {
+  background-color: #4f8cff;
+  color: white;
+  box-shadow: 0 2px 8px rgba(79, 140, 255, 0.5);
+}
+
+/* Make sure disabled buttons don't lose their active state */
+#board-size-selector .selector-buttons button:disabled.active {
+  opacity: 1;
+  background-color: #4f8cff;
+  color: white;
+}
+
+.selector-container {
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 145px;
+}
+
+.selector-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4f8cff;
+  margin-bottom: 8px;
+}
+
+.selector-options {
+  display: flex;
+  gap: 6px;
+}
+
+.selector-options .option {
+  background-color: white;
+  color: #4f8cff;
+  border: 1px solid #4f8cff;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selector-options .option.active {
+  background-color: #4f8cff;
+  color: white;
+}
+
+.selector-options .option:hover:not(:disabled) {
+  background-color: rgba(79, 140, 255, 0.1);
+}
+
+.selector-options .option:disabled.active {
+  opacity: 1;
+}
+
+.game-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 480px) {
+  .selector-group {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+  }
+}
+
 /* Responsive Styles */
 @media (max-width: 576px) {
   .board {
-    grid-template-columns: repeat(3, 80px);
-    grid-template-rows: repeat(3, 80px);
+    --ttt-square-size: 56px;
+    --ttt-gap: 5px;
   }
-
+  .board.size-4 {
+    --ttt-square-size: 48px;
+    --ttt-gap: 20px;
+  }
   .square {
-    font-size: 36px;
-    line-height: 80px;
-    height: 80px;
-    width: 80px;
-  }
-
-  .game-container {
-    padding: 1rem;
+    font-size: calc(var(--ttt-square-size) * 0.48);
   }
 }
 
 @media (max-width: 360px) {
   .board {
-    grid-template-columns: repeat(3, 70px);
-    grid-template-rows: repeat(3, 70px);
+    --ttt-square-size: 40px;
+    --ttt-gap: 3px;
   }
-
+  .board.size-4 {
+    --ttt-square-size: 35px;
+    --ttt-gap: 15px;
+  }
   .square {
-    font-size: 32px;
-    height: 70px;
-    width: 70px;
+    font-size: calc(var(--ttt-square-size) * 0.48);
   }
 }

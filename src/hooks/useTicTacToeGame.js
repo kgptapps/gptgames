@@ -9,11 +9,12 @@ import {
 /**
  * Custom hook for managing TicTacToe game state
  * @param {Function} updateStats - Function to update game statistics
+ * @param {number} boardSize - Size of the board (e.g., 3 for 3x3, 4 for 4x4)
  * @returns {Object} Game state and handler functions
  */
-export default function useTicTacToeGame(updateStats) {
+export default function useTicTacToeGame(updateStats, boardSize = 3) {
   // Game state
-  const [board, setBoard] = useState(emptyBoard);
+  const [board, setBoard] = useState(Array(boardSize * boardSize).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [gameHistory, setGameHistory] = useState({ x: 0, o: 0, draw: 0 });
   const [difficulty, setDifficulty] = useState("medium");
@@ -21,8 +22,15 @@ export default function useTicTacToeGame(updateStats) {
   const [gameOver, setGameOver] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
 
+  // Reset board when board size changes
+  useEffect(() => {
+    setBoard(Array(boardSize * boardSize).fill(null));
+    setXIsNext(true);
+    setMoveCount(0);
+  }, [boardSize]);
+
   // Calculate current game state
-  const winResult = calculateWinner(board);
+  const winResult = calculateWinner(board, boardSize);
   const winner = winResult ? winResult.winner : null;
   const winLine = winResult ? winResult.line : null;
   const isDraw = getAvailableMoves(board).length === 0 && !winner;
@@ -48,14 +56,14 @@ export default function useTicTacToeGame(updateStats) {
       setIsThinking(true);
 
       const timer = setTimeout(() => {
-        setBoard((prevBoard) => computerMove(prevBoard, difficulty));
+        setBoard((prevBoard) => computerMove(prevBoard, difficulty, boardSize));
         setXIsNext(true);
         setIsThinking(false);
         setMoveCount((prev) => prev + 1);
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [xIsNext, board, winner, difficulty]);
+  }, [xIsNext, board, winner, difficulty, boardSize]);
 
   // Update score when game ends
   useEffect(() => {
@@ -94,10 +102,10 @@ export default function useTicTacToeGame(updateStats) {
 
   // Game restart handler
   const handleRestart = useCallback(() => {
-    setBoard(emptyBoard);
+    setBoard(Array(boardSize * boardSize).fill(null));
     setXIsNext(true);
     setMoveCount(0);
-  }, []);
+  }, [boardSize]);
 
   // Difficulty change handler
   const handleSetDifficulty = useCallback(

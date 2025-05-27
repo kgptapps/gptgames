@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import withGameStats from "./hooks/withGameStats";
 import Board from "./components/Board";
 import GameInfo from "./components/GameInfo";
@@ -11,6 +11,7 @@ import "./styles/games/tictactoe.css";
  * The main component that manages game state and logic
  */
 function TicTacToe({ updateStats }) {
+  const [boardSize, setBoardSize] = useState(3);
   const {
     board,
     winLine,
@@ -23,7 +24,15 @@ function TicTacToe({ updateStats }) {
     handleSquareClick,
     handleRestart,
     handleSetDifficulty,
-  } = useTicTacToeGame(updateStats);
+  } = useTicTacToeGame(updateStats, boardSize);
+
+  // Handle board size change
+  const handleSetBoardSize = (size) => {
+    console.log(`Changing board size to: ${size}x${size}`);
+    setBoardSize(size);
+    // We don't need to call handleRestart here since useEffect in useTicTacToeGame
+    // will handle this when boardSize changes
+  };
 
   const { updateActiveGame, updateGameData } = useActiveGame();
   const hasSetActiveGame = useRef(false);
@@ -64,14 +73,18 @@ function TicTacToe({ updateStats }) {
         difficulty={difficulty}
         onSetDifficulty={handleSetDifficulty}
         moveCount={moveCount}
+        boardSize={boardSize}
+        onSetBoardSize={handleSetBoardSize}
       />
 
       <Board
+        key={`board-${boardSize}`}
         board={board}
         winLine={winLine}
         handleSquareClick={handleSquareClick}
         isThinking={isThinking}
         winner={winner}
+        boardSize={boardSize}
       />
 
       <button className="restart" onClick={handleRestart}>

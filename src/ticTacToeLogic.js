@@ -3,28 +3,58 @@
  * This file contains the core game logic for the TicTacToe game
  */
 
-// Win patterns
-export const lines = [
-  [0, 1, 2], // top row
-  [3, 4, 5], // middle row
-  [6, 7, 8], // bottom row
-  [0, 3, 6], // left column
-  [1, 4, 7], // middle column
-  [2, 5, 8], // right column
-  [0, 4, 8], // diagonal \
-  [2, 4, 6], // diagonal /
-];
+/**
+ * Generate all win lines for a given board size (n-in-a-row)
+ * @param {number} size - Board size (e.g., 3 or 4)
+ * @returns {Array} - Array of win line arrays
+ */
+function generateWinLines(size) {
+  const lines = [];
+  // Rows
+  for (let r = 0; r < size; r++) {
+    const row = [];
+    for (let c = 0; c < size; c++) {
+      row.push(r * size + c);
+    }
+    lines.push(row);
+  }
+  // Columns
+  for (let c = 0; c < size; c++) {
+    const col = [];
+    for (let r = 0; r < size; r++) {
+      col.push(r * size + c);
+    }
+    lines.push(col);
+  }
+  // Diagonal \
+  const diag1 = [];
+  for (let i = 0; i < size; i++) {
+    diag1.push(i * size + i);
+  }
+  lines.push(diag1);
+  // Diagonal /
+  const diag2 = [];
+  for (let i = 0; i < size; i++) {
+    diag2.push(i * size + (size - 1 - i));
+  }
+  lines.push(diag2);
+  return lines;
+}
 
 /**
- * Calculate if there's a winner on the board
+ * Calculate if there's a winner on the board (supports 3x3 and 4x4)
  * @param {Array} squares - The current board state
+ * @param {number} boardSize - Board size (default 3)
  * @returns {Object|null} - The winner and winning line, or null
  */
-export function calculateWinner(squares) {
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: lines[i] };
+export function calculateWinner(squares, boardSize = 3) {
+  const winLines = generateWinLines(boardSize);
+  for (let i = 0; i < winLines.length; i++) {
+    const line = winLines[i];
+    const first = squares[line[0]];
+    if (!first) continue;
+    if (line.every((idx) => squares[idx] === first)) {
+      return { winner: first, line };
     }
   }
   return null;
@@ -47,8 +77,8 @@ export function getAvailableMoves(board) {
  * @param {string} player - The player to evaluate for ('X' or 'O')
  * @returns {number} - Score for the given board state
  */
-function evaluateBoard(board, depth) {
-  const winResult = calculateWinner(board);
+function evaluateBoard(board, depth, boardSize = 3) {
+  const winResult = calculateWinner(board, boardSize);
 
   if (winResult) {
     if (winResult.winner === "O") {
@@ -68,6 +98,7 @@ function evaluateBoard(board, depth) {
  * @param {boolean} isMaximizing - Whether to maximize or minimize score
  * @param {number} alpha - Alpha value for alpha-beta pruning
  * @param {number} beta - Beta value for alpha-beta pruning
+ * @param {number} boardSize - Board size (default 3)
  * @returns {number} - Best score for the current position
  */
 function minimax(
@@ -75,12 +106,13 @@ function minimax(
   depth,
   isMaximizing,
   alpha = -Infinity,
-  beta = Infinity
+  beta = Infinity,
+  boardSize = 3
 ) {
   // Base cases: terminal states
-  const winResult = calculateWinner(board);
+  const winResult = calculateWinner(board, boardSize);
   if (winResult || depth === 0 || getAvailableMoves(board).length === 0) {
-    return evaluateBoard(board, depth);
+    return evaluateBoard(board, depth, boardSize);
   }
 
   if (isMaximizing) {
@@ -88,7 +120,14 @@ function minimax(
     for (const move of getAvailableMoves(board)) {
       const boardCopy = [...board];
       boardCopy[move] = "O";
-      const score = minimax(boardCopy, depth - 1, false, alpha, beta);
+      const score = minimax(
+        boardCopy,
+        depth - 1,
+        false,
+        alpha,
+        beta,
+        boardSize
+      );
       bestScore = Math.max(bestScore, score);
       alpha = Math.max(alpha, bestScore);
       if (beta <= alpha) {
@@ -101,7 +140,7 @@ function minimax(
     for (const move of getAvailableMoves(board)) {
       const boardCopy = [...board];
       boardCopy[move] = "X";
-      const score = minimax(boardCopy, depth - 1, true, alpha, beta);
+      const score = minimax(boardCopy, depth - 1, true, alpha, beta, boardSize);
       bestScore = Math.min(bestScore, score);
       beta = Math.min(beta, bestScore);
       if (beta <= alpha) {
@@ -113,12 +152,13 @@ function minimax(
 }
 
 /**
- * Get the best move for the computer based on difficulty
+ * Get the best move for the computer based on difficulty and board size
  * @param {Array} board - The current board state
  * @param {string} difficulty - The difficulty level ('easy', 'medium', or 'hard')
+ * @param {number} boardSize - Board size (default 3)
  * @returns {number} - The index of the best move
  */
-export function getBestMove(board, difficulty) {
+export function getBestMove(board, difficulty, boardSize = 3) {
   const availableMoves = getAvailableMoves(board);
 
   if (availableMoves.length === 0) return -1;
@@ -139,7 +179,7 @@ export function getBestMove(board, difficulty) {
     for (const move of availableMoves) {
       const boardCopy = [...board];
       boardCopy[move] = "O";
-      const winResult = calculateWinner(boardCopy);
+      const winResult = calculateWinner(boardCopy, boardSize);
       if (winResult && winResult.winner === "O") {
         return move;
       }
@@ -149,27 +189,32 @@ export function getBestMove(board, difficulty) {
     for (const move of availableMoves) {
       const boardCopy = [...board];
       boardCopy[move] = "X";
-      const winResult = calculateWinner(boardCopy);
+      const winResult = calculateWinner(boardCopy, boardSize);
       if (winResult && winResult.winner === "X") {
         return move;
       }
     }
 
-    // Take center if available
-    if (availableMoves.includes(4)) {
-      return 4;
+    // Take center if available (for 3x3 or 4x4)
+    const center = Math.floor((boardSize * boardSize) / 2);
+    if (availableMoves.includes(center)) {
+      return center;
     }
 
-    // Random move from corners or edges with different probabilities
-    const corners = [0, 2, 6, 8].filter((corner) =>
-      availableMoves.includes(corner)
-    );
-    const edges = [1, 3, 5, 7].filter((edge) => availableMoves.includes(edge));
+    // Corners and edges for 3x3 only
+    if (boardSize === 3) {
+      const corners = [0, 2, 6, 8].filter((corner) =>
+        availableMoves.includes(corner)
+      );
+      const edges = [1, 3, 5, 7].filter((edge) =>
+        availableMoves.includes(edge)
+      );
 
-    if (corners.length > 0 && Math.random() < 0.7) {
-      return corners[Math.floor(Math.random() * corners.length)];
-    } else if (edges.length > 0) {
-      return edges[Math.floor(Math.random() * edges.length)];
+      if (corners.length > 0 && Math.random() < 0.7) {
+        return corners[Math.floor(Math.random() * corners.length)];
+      } else if (edges.length > 0) {
+        return edges[Math.floor(Math.random() * edges.length)];
+      }
     }
 
     // If we get here, just pick a random available move
@@ -188,7 +233,14 @@ export function getBestMove(board, difficulty) {
     for (const move of availableMoves) {
       const boardCopy = [...board];
       boardCopy[move] = "O";
-      const score = minimax(boardCopy, maxDepth, false);
+      const score = minimax(
+        boardCopy,
+        maxDepth,
+        false,
+        -Infinity,
+        Infinity,
+        boardSize
+      );
 
       if (score > bestScore) {
         bestScore = score;
@@ -203,13 +255,14 @@ export function getBestMove(board, difficulty) {
 }
 
 /**
- * Make a computer move on the board
+ * Make a computer move on the board (supports board size)
  * @param {Array} board - The current board state
  * @param {string} difficulty - The difficulty level
+ * @param {number} boardSize - Board size (default 3)
  * @returns {Array} - The new board state after computer's move
  */
-export function computerMove(board, difficulty) {
-  const move = getBestMove(board, difficulty);
+export function computerMove(board, difficulty, boardSize = 3) {
+  const move = getBestMove(board, difficulty, boardSize);
   if (move === -1) return board;
 
   const newBoard = [...board];
@@ -217,5 +270,5 @@ export function computerMove(board, difficulty) {
   return newBoard;
 }
 
-// Initial empty board
+// Initial empty board (3x3 by default)
 export const emptyBoard = Array(9).fill(null);
