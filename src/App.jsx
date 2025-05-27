@@ -7,6 +7,7 @@ import WordScrambleGame from "./WordScrambleGame";
 import MemoryMatchGame from "./MemoryMatchGame";
 import FastTypingGame from "./FastTypingGame";
 import SimonSaysGame from "./SimonSaysGame";
+import SnakeGame from "./SnakeGame";
 import { buildInfo } from "./buildInfo";
 import StatusBar from "./StatusBar";
 import useGameStats from "./hooks/useGameStats";
@@ -92,6 +93,12 @@ export default function App() {
           >
             Simon Says
           </button>
+          <button
+            className={tab === "snake" ? "tab active" : "tab"}
+            onClick={() => setTab("snake")}
+          >
+            Snake
+          </button>
         </div>
       </div>
       <div className="main-content">
@@ -110,6 +117,10 @@ export default function App() {
             <MemoryMatchGame updateStats={updateStats} />
           ) : tab === "typing" ? (
             <FastTypingGame updateStats={updateStats} />
+          ) : tab === "simon" ? (
+            <SimonSaysGame updateStats={updateStats} />
+          ) : tab === "snake" ? (
+            <SnakeGame updateStats={updateStats} />
           ) : (
             <SimonSaysGame updateStats={updateStats} />
           )}

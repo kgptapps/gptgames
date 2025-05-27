@@ -20,6 +20,13 @@ export default function useGameStats() {
           memory: { solved: 0, played: 0 },
           typing: { solved: 0, played: 0 },
           simon: { best: 0, played: 0 },
+          snake: {
+            score: 0,
+            highScore: 0,
+            currentLength: 3,
+            maxLength: 3,
+            played: 0,
+          },
         };
   });
 
@@ -41,8 +48,10 @@ export default function useGameStats() {
       // Create a copy of the previous game stats
       const updated = { ...prevGame };
 
-      // Always increment played count when stats are updated
-      updated.played = (updated.played || 0) + 1;
+      // Increment played count unless explicitly set in payload
+      if (!("played" in payload)) {
+        updated.played = (updated.played || 0) + 1;
+      }
 
       // Update specific stats based on payload type
       Object.entries(payload).forEach(([key, value]) => {

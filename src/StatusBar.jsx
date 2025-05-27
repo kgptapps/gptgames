@@ -17,6 +17,13 @@ const StatusBar = ({ stats }) => {
     memory: { solved: 0, played: 0 },
     typing: { solved: 0, played: 0 },
     simon: { best: 0, played: 0 },
+    snake: {
+      score: 0,
+      highScore: 0,
+      currentLength: 3,
+      maxLength: 3,
+      played: 0,
+    },
   };
 
   // Merge default stats with actual stats
@@ -29,7 +36,7 @@ const StatusBar = ({ stats }) => {
     <div className="rightbar compact-scrollable wide">
       <h3 className="stats-title">Game Stats</h3>
       <ul className="stats-list-compact">
-        <li className="stat-row">
+        <li className="stat-row" data-game="tictactoe">
           <span className="stat-label">TicTacToe</span>
           <span className="stat-badge win">{mergedStats.tictactoe.wins}W</span>
           <span className="stat-badge loss">
@@ -39,18 +46,18 @@ const StatusBar = ({ stats }) => {
             {mergedStats.tictactoe.draws}D
           </span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="guess">
           <span className="stat-label">Guess</span>
           <span className="stat-badge win">{mergedStats.guess.wins}W</span>
           <span className="stat-badge loss">{mergedStats.guess.losses}L</span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="puzzle">
           <span className="stat-label">Puzzle</span>
           <span className="stat-badge solved">
             {mergedStats.puzzle.solved}✔
           </span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="color">
           <span className="stat-label">Color</span>
           <span className="stat-badge correct">
             {mergedStats.color.correct}✔
@@ -62,26 +69,38 @@ const StatusBar = ({ stats }) => {
             {mergedStats.color.played || 0} played
           </span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="word">
           <span className="stat-label">Word</span>
           <span className="stat-badge solved">{mergedStats.word.solved}✔</span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="memory">
           <span className="stat-label">Memory</span>
           <span className="stat-badge solved">
             {mergedStats.memory.solved}✔
           </span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="typing">
           <span className="stat-label">Typing</span>
           <span className="stat-badge solved">
             {mergedStats.typing.solved || 0}✔
           </span>
         </li>
-        <li className="stat-row">
+        <li className="stat-row" data-game="simon">
           <span className="stat-label">Simon</span>
           <span className="stat-badge best">
             Best: {mergedStats.simon.best}
+          </span>
+        </li>
+        <li className="stat-row" data-game="snake">
+          <span className="stat-label">Snake</span>
+          <span className="stat-badge score">
+            Score: {mergedStats.snake.score || 0}
+          </span>
+          <span className="stat-badge best">
+            High: {mergedStats.snake.highScore || 0}
+          </span>
+          <span className="stat-badge length">
+            Length: {mergedStats.snake.maxLength || 3}
           </span>
         </li>
       </ul>
