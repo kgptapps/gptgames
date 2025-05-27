@@ -4,12 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Kannaiyan's Copilot Games</title>
-    <script src="./refresh.js"></script>
-    <script type="module" crossorigin src="/gptgames/assets/index-CedNMvJP.js"></script>
+    <script>
+      // Force refresh if needed
+      const timestamp = new Date().getTime();
+      if (
+        !sessionStorage.getItem("pageLoadTimestamp") ||
+        parseInt(sessionStorage.getItem("pageLoadTimestamp")) <
+          timestamp - 300000
+      ) {
+        sessionStorage.setItem("pageLoadTimestamp", timestamp);
+        if (!window.location.search.includes("t=")) {
+          window.location.search = window.location.search
+            ? window.location.search + "&t=" + timestamp
+            : "t=" + timestamp;
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/gptgames/assets/index-ChSMqNIZ.js"></script>
     <link rel="stylesheet" crossorigin href="/gptgames/assets/index-CkJa8gQI.css">
   </head>
   <body>
