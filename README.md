@@ -1,4 +1,4 @@
-# GitHub Copilot Games
+# Kannaiyan's Copilot Games
 
 ![GitHub Pages Deployment](https://github.com/kgptapps/gptgames/actions/workflows/deploy.yml/badge.svg)
 

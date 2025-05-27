@@ -14,7 +14,7 @@ export default function App() {
   return (
     <div>
       <header className="app-header">
-        <h1>GitHub Copilot Games</h1>
+        <h1>Kannaiyan's Copilot Games</h1>
       </header>
       <div className="tabs">
         <button
