@@ -1,0 +1,11 @@
+/* Main styles entry point */
+@import './base.css';
+@import './layout.css';
+@import './components/buttons.css';
+@import './components/banner.css';
+@import './games/tictactoe.css';
+@import './games/snake.css';
+@import './games/puzzle.css';
+
+/* This file imports all CSS modules. 
+   Add new imports here when creating new component or game-specific styles. */

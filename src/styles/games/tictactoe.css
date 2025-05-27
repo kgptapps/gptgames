@@ -1,0 +1,87 @@
+/* TicTacToe game styles */
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.square {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 100px;
+  height: 100px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 100px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.square:hover {
+  background-color: #333;
+}
+
+.square.winning {
+  background-color: #47a3f3;
+  color: #fff;
+}
+
+.game-info {
+  margin-top: 2rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.status {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.win {
+  color: #22c55e;
+}
+
+.lose {
+  color: #ef4444;
+}
+
+.draw {
+  color: #f59e0b;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+  .board {
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+  }
+  
+  .square {
+    font-size: 32px;
+    line-height: 80px;
+    height: 80px;
+    width: 80px;
+  }
+}

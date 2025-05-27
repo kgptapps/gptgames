@@ -1,0 +1,86 @@
+/* Button styles */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  color: white;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--primary-color);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Primary button */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color-hover);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(100, 108, 255, 0.1);
+}
+
+/* Game navigation buttons */
+.game-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  border-radius: 0;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.game-button.active {
+  background-color: #2a2a2a;
+  color: var(--primary-color);
+  border-left: 4px solid var(--primary-color);
+}
+
+.game-button:hover:not(.active) {
+  background-color: #2a2a2a;
+  border-color: transparent;
+}
+
+/* Mobile game nav buttons */
+@media (max-width: 768px) {
+  .game-button {
+    display: inline-block;
+    width: auto;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    text-align: center;
+  }
+  
+  .game-button.active {
+    border-left: none;
+    background-color: var(--primary-color);
+    color: white;
+  }
+}

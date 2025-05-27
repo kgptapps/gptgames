@@ -1,0 +1,224 @@
+/* Banner styles */
+.copilot-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+  z-index: 1000;
+  box-shadow: var(--box-shadow);
+  transition: all var(--transition-speed) ease;
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.copilot-banner:not(.copilot-minimized) {
+  max-height: 100vh;
+  position: fixed;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.copilot-banner-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.copilot-banner-content.minimized {
+  padding: 0;
+  width: 100%;
+}
+
+.copilot-minimized {
+  height: 40px;
+  opacity: 0.95;
+  overflow: visible;
+  transition: background-color 0.3s ease;
+}
+
+.copilot-banner.copilot-minimized:hover {
+  background-color: #2d3748;
+  max-height: none;
+  z-index: 1000;
+}
+
+.expand-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: var(--secondary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  height: 40px;
+  transition: all 0.2s ease;
+}
+
+.expand-button:hover {
+  background-color: #273244;
+  color: #60daff;
+}
+
+.expand-icon {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.expand-button:hover .expand-icon {
+  transform: translateY(2px);
+}
+
+.banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.banner-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.header-buttons {
+  display: flex;
+}
+
+.minimize-button {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.minimize-button:hover {
+  background-color: #394b61;
+  color: white;
+}
+
+.ai-models {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+.ai-model {
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.ai-divider {
+  margin: 0 0.75rem;
+  color: #64748b;
+}
+
+.features-section {
+  margin-top: 1.5rem;
+}
+
+.features-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: var(--secondary-color);
+}
+
+.features-section ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.features-section li {
+  padding: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.features-section li:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.features-section li strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--secondary-color);
+}
+
+.features-section li p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.disclaimer {
+  margin-top: 2rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+}
+
+.disclaimer strong {
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+/* Responsive styles for the banner */
+@media (max-width: 768px) {
+  .banner-body ul {
+    grid-template-columns: 1fr;
+  }
+
+  .copilot-banner-content {
+    padding: 0.75rem;
+  }
+
+  .banner-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .features-section ul {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .copilot-minimized {
+    height: 42px;
+  }
+
+  .app-container {
+    padding-top: 42px;
+  }
+  
+  .expand-button {
+    font-size: 0.8rem;
+  }
+}

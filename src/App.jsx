@@ -13,7 +13,6 @@ import StatusBar from "./StatusBar";
 import CopilotBanner from "./components/CopilotBanner";
 import useGameStats from "./hooks/useGameStats";
 import { trackGameEvent, trackGameChange } from "./utils/analytics";
-import "./App.css";
 
 export default function App() {
   const [tab, setTab] = useState("tictactoe");
