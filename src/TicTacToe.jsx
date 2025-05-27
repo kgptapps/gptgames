@@ -25,6 +25,7 @@ export default function TicTacToe({ updateStats }) {
   const winResult = calculateWinner(board);
   const winner = winResult ? winResult.winner : null;
   const winLine = winResult ? winResult.line : null;
+  const isDraw = getAvailableMoves(board).length === 0 && !winner;
 
   // Handle player's move
   const handleClick = (i) => {
@@ -58,29 +59,29 @@ export default function TicTacToe({ updateStats }) {
         ...prev,
         [winner.toLowerCase()]: prev[winner.toLowerCase()] + 1,
       }));
-    } else if (getAvailableMoves(board).length === 0 && !winner) {
+    } else if (isDraw) {
       setGameHistory((prev) => ({
         ...prev,
         draw: prev.draw + 1,
       }));
     }
-  }, [winner, board]);
+  }, [winner, isDraw]);
 
-  // Call updateStats when the game ends
+  // Call updateStats when the game ends (win or draw)
   useEffect(() => {
-    if ((winner || winResult?.draw) && !gameOver) {
+    if ((winner || isDraw) && !gameOver) {
       setGameOver(true);
       if (updateStats) {
         updateStats("tictactoe", {
           win: winner === "X",
-          draw: winResult?.draw,
+          draw: isDraw,
         });
       }
     }
-    if (!winner && !winResult?.draw && gameOver) {
+    if (!winner && !isDraw && gameOver) {
       setGameOver(false);
     }
-  }, [winner, winResult?.draw, updateStats, gameOver]);
+  }, [winner, isDraw, updateStats, gameOver]);
 
   // Game restart handler
   const handleRestart = () => {

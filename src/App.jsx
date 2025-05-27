@@ -157,43 +157,65 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="rightbar">
-        <h3>Game Stats</h3>
-        <div className="stats-list">
-          <div className="stat-item">
-            <b>Tic Tac Toe:</b> Played: {gameStats.tictactoe.played}, Wins:{" "}
-            {gameStats.tictactoe.wins}, Losses: {gameStats.tictactoe.losses},
-            Draws: {gameStats.tictactoe.draws}
-          </div>
-          <div className="stat-item">
-            <b>Number Guess:</b> Played: {gameStats.guess.played}, Wins:{" "}
-            {gameStats.guess.wins}, Losses: {gameStats.guess.losses}
-          </div>
-          <div className="stat-item">
-            <b>Puzzle:</b> Played: {gameStats.puzzle.played}, Solved:{" "}
-            {gameStats.puzzle.solved}
-          </div>
-          <div className="stat-item">
-            <b>Color Match:</b> Played: {gameStats.color.played}, Correct:{" "}
-            {gameStats.color.correct}
-          </div>
-          <div className="stat-item">
-            <b>Word Scramble:</b> Played: {gameStats.word.played}, Solved:{" "}
-            {gameStats.word.solved}
-          </div>
-          <div className="stat-item">
-            <b>Memory Match:</b> Played: {gameStats.memory.played}, Solved:{" "}
-            {gameStats.memory.solved}
-          </div>
-          <div className="stat-item">
-            <b>Speed Typing:</b> Played: {gameStats.typing.played}, Completed:{" "}
-            {gameStats.typing.solved}
-          </div>
-          <div className="stat-item">
-            <b>Simon Says:</b> Played: {gameStats.simon.played}, Best:{" "}
-            {gameStats.simon.best}
-          </div>
-        </div>
+      <div className="rightbar compact-scrollable wide">
+        <h3 className="stats-title">Game Stats</h3>
+        <ul className="stats-list-compact">
+          <li className="stat-row">
+            <span className="stat-label">TicTacToe</span>{" "}
+            <span className="stat-badge win">{gameStats.tictactoe.wins}W</span>{" "}
+            <span className="stat-badge loss">
+              {gameStats.tictactoe.losses}L
+            </span>{" "}
+            <span className="stat-badge draw">
+              {gameStats.tictactoe.draws}D
+            </span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Guess</span>{" "}
+            <span className="stat-badge win">{gameStats.guess.wins}W</span>{" "}
+            <span className="stat-badge loss">{gameStats.guess.losses}L</span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Puzzle</span>{" "}
+            <span className="stat-badge solved">
+              {gameStats.puzzle.solved}✔
+            </span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Color</span>{" "}
+            <span className="stat-badge correct">
+              {gameStats.color.correct}✔
+            </span>{" "}
+            <span className="stat-badge best">
+              Best: {gameStats.color.best || 0}
+            </span>{" "}
+            <span className="stat-badge played">
+              {gameStats.color.played || 0} played
+            </span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Word</span>{" "}
+            <span className="stat-badge solved">{gameStats.word.solved}✔</span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Memory</span>{" "}
+            <span className="stat-badge solved">
+              {gameStats.memory.solved}✔
+            </span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Typing</span>{" "}
+            <span className="stat-badge solved">
+              {gameStats.typing.solved || 0}✔
+            </span>
+          </li>
+          <li className="stat-row">
+            <span className="stat-label">Simon</span>{" "}
+            <span className="stat-badge best">
+              Best: {gameStats.simon.best}
+            </span>
+          </li>
+        </ul>
       </div>
     </div>
   );

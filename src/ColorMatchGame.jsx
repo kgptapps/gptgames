@@ -80,6 +80,15 @@ export default function ColorMatchGame({ updateStats }) {
     }
   }, [roundOver, isCorrect, updateStats]);
 
+  // Call updateStats when a correct match is made
+  useEffect(() => {
+    if (isCorrect !== null && updateStats) {
+      updateStats("color", { correct: isCorrect });
+    }
+    // Only run when isCorrect changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCorrect]);
+
   const handleAnswer = (answer) => {
     if (gameOver) return;
 
