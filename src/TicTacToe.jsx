@@ -1,138 +1,31 @@
 import React, { useState, useEffect } from "react";
+import {
+  emptyBoard,
+  calculateWinner,
+  getAvailableMoves,
+  computerMove,
+} from "./ticTacToeLogic";
+import Board from "./components/Board";
+import GameInfo from "./components/GameInfo";
 
-const emptyBoard = Array(9).fill(null);
-
-// Win patterns
-const lines = [
-  [0, 1, 2], // top row
-  [3, 4, 5], // middle row
-  [6, 7, 8], // bottom row
-  [0, 3, 6], // left column
-  [1, 4, 7], // middle column
-  [2, 5, 8], // right column
-  [0, 4, 8], // diagonal \
-  [2, 4, 6], // diagonal /
-];
-
-function calculateWinner(squares) {
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: lines[i] };
-    }
-  }
-  return null;
-}
-
-function getAvailableMoves(board) {
-  return board
-    .map((val, idx) => (val === null ? idx : null))
-    .filter((v) => v !== null);
-}
-
-function getBestMove(board, difficulty) {
-  const availableMoves = getAvailableMoves(board);
-
-  if (availableMoves.length === 0) return -1;
-
-  // Easy: Just make random moves
-  if (difficulty === "easy") {
-    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-  }
-
-  // Medium: Mix of strategy and randomness
-  if (difficulty === "medium") {
-    // Check if computer can win in the next move
-    for (const move of availableMoves) {
-      const boardCopy = [...board];
-      boardCopy[move] = "O";
-      const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === "O") {
-        return move;
-      }
-    }
-
-    // Check if player can win in the next move and block
-    for (const move of availableMoves) {
-      const boardCopy = [...board];
-      boardCopy[move] = "X";
-      const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === "X") {
-        return move;
-      }
-    }
-
-    // Take center if available
-    if (availableMoves.includes(4)) {
-      return 4;
-    }
-
-    // Random move
-    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-  }
-
-  // Hard: Prioritize winning moves and optimal strategy
-  if (difficulty === "hard") {
-    // Check if computer can win in the next move
-    for (const move of availableMoves) {
-      const boardCopy = [...board];
-      boardCopy[move] = "O";
-      const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === "O") {
-        return move;
-      }
-    }
-
-    // Check if player can win in the next move and block
-    for (const move of availableMoves) {
-      const boardCopy = [...board];
-      boardCopy[move] = "X";
-      const winResult = calculateWinner(boardCopy);
-      if (winResult && winResult.winner === "X") {
-        return move;
-      }
-    }
-
-    // Take center if available
-    if (availableMoves.includes(4)) {
-      return 4;
-    }
-
-    // Take corners if available
-    const corners = [0, 2, 6, 8].filter((corner) =>
-      availableMoves.includes(corner)
-    );
-    if (corners.length > 0) {
-      return corners[Math.floor(Math.random() * corners.length)];
-    }
-
-    // Take edges
-    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-  }
-
-  return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-}
-
-function computerMove(board, difficulty) {
-  const move = getBestMove(board, difficulty);
-  if (move === -1) return board;
-
-  const newBoard = [...board];
-  newBoard[move] = "O";
-  return newBoard;
-}
-
+/**
+ * TicTacToe Game Component
+ * The main component that manages game state and logic
+ */
 export default function TicTacToe() {
+  // Game state
   const [board, setBoard] = useState(emptyBoard);
   const [xIsNext, setXIsNext] = useState(true);
   const [gameHistory, setGameHistory] = useState({ x: 0, o: 0, draw: 0 });
   const [difficulty, setDifficulty] = useState("medium");
   const [isThinking, setIsThinking] = useState(false);
 
+  // Calculate current game state
   const winResult = calculateWinner(board);
   const winner = winResult ? winResult.winner : null;
   const winLine = winResult ? winResult.line : null;
 
+  // Handle player's move
   const handleClick = (i) => {
     if (board[i] || winner || isThinking) return;
 
@@ -142,6 +35,7 @@ export default function TicTacToe() {
     setXIsNext(false);
   };
 
+  // Computer's move effect
   useEffect(() => {
     if (!xIsNext && !winner && getAvailableMoves(board).length > 0) {
       // Show "thinking" state
@@ -171,32 +65,19 @@ export default function TicTacToe() {
     }
   }, [winner, board]);
 
+  // Game restart handler
   const handleRestart = () => {
     setBoard(emptyBoard);
     setXIsNext(true);
   };
 
+  // Difficulty change handler
   const handleSetDifficulty = (level) => {
     setDifficulty(level);
     handleRestart();
   };
 
-  const renderSquare = (i) => {
-    const isWinningSquare = winLine && winLine.includes(i);
-
-    return (
-      <button
-        className={`square${board[i] ? " " + board[i] : ""}${
-          isWinningSquare ? " winning" : ""
-        }`}
-        onClick={() => handleClick(i)}
-        disabled={Boolean(board[i]) || Boolean(winner) || isThinking}
-      >
-        {board[i]}
-      </button>
-    );
-  };
-
+  // Generate status message
   let status;
   if (winner) {
     status = winner === "X" ? "You win!" : "Computer wins!";
@@ -208,47 +89,20 @@ export default function TicTacToe() {
 
   return (
     <div className="game-container">
-      <h1>Tic Tac Toe</h1>
+      <GameInfo
+        status={status}
+        gameHistory={gameHistory}
+        difficulty={difficulty}
+        onSetDifficulty={handleSetDifficulty}
+      />
 
-      <div className="game-info">
-        <div className="score-board">
-          <div>You (X): {gameHistory.x}</div>
-          <div>Draw: {gameHistory.draw}</div>
-          <div>Computer (O): {gameHistory.o}</div>
-        </div>
-
-        <div className="status">{status}</div>
-
-        <div className="difficulty-selector">
-          <span>Difficulty:</span>
-          <button
-            className={difficulty === "easy" ? "active" : ""}
-            onClick={() => handleSetDifficulty("easy")}
-          >
-            Easy
-          </button>
-          <button
-            className={difficulty === "medium" ? "active" : ""}
-            onClick={() => handleSetDifficulty("medium")}
-          >
-            Medium
-          </button>
-          <button
-            className={difficulty === "hard" ? "active" : ""}
-            onClick={() => handleSetDifficulty("hard")}
-          >
-            Hard
-          </button>
-        </div>
-      </div>
-
-      <div className="board">
-        {[0, 1, 2].map((row) => (
-          <div className="board-row" key={row}>
-            {[0, 1, 2].map((col) => renderSquare(row * 3 + col))}
-          </div>
-        ))}
-      </div>
+      <Board
+        board={board}
+        winLine={winLine}
+        handleSquareClick={handleClick}
+        isThinking={isThinking}
+        winner={winner}
+      />
 
       <button className="restart" onClick={handleRestart}>
         New Game
