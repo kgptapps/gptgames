@@ -283,13 +283,10 @@ function SnakeGame({ updateStats }) {
       <h2>Snake Game</h2>
       <p>Use arrow keys to control the snake. Eat food to grow longer!</p>
 
-      <div className="game-info">
-        <span>Score: {score}</span>
-        <span>High Score: {highScore}</span>
-        <span>Length: {snake.length}</span>
-        <span>Max Length: {maxLength}</span>
+      <div className="game-status">
         {gameOver && <span className="game-over">Game Over!</span>}
         {paused && !gameOver && <span className="paused">Paused</span>}
+        {!gameOver && !paused && <span className="score">Score: {score}</span>}
       </div>
 
       <div
@@ -368,15 +365,21 @@ function SnakeGame({ updateStats }) {
         </button>
       </div>
 
-      <div className="instructions">
-        <h3>How to Play</h3>
-        <ul>
-          <li>Use arrow keys to move the snake</li>
-          <li>Eat red food to grow longer and earn points</li>
-          <li>Avoid hitting the walls or yourself</li>
-          <li>Press spacebar to pause/resume</li>
-          <li>Press 'r' to restart when game is over</li>
-        </ul>
+      <div className="snake-info-section">
+        <div className="instructions">
+          <h3>How to Play</h3>
+          <ul>
+            <li>Use arrow keys to move the snake</li>
+            <li>Eat red food to grow longer and earn points</li>
+            <li>Avoid hitting the walls or yourself</li>
+            <li>Press spacebar to pause/resume</li>
+            <li>Press 'r' to restart when game is over</li>
+          </ul>
+        </div>
+        <div className="snake-legend">
+          <h3>Game Stats</h3>
+          <p>View your current score, high score, and snake length in the status bar.</p>
+        </div>
       </div>
     </div>
   );
