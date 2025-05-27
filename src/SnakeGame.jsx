@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import withGameStats from "./hooks/withGameStats";
+import { trackGameEvent } from "./utils/analytics";
 
 // Game constants
 const GRID_SIZE = 25; // Increased from 20
@@ -86,6 +87,14 @@ function SnakeGame({ updateStats }) {
         // Schedule state updates for next tick to avoid updating during render
         setTimeout(() => {
           setGameOver(true);
+
+          // Track game over event with analytics
+          trackGameEvent("snake", "game_over", {
+            score,
+            length: prevSnake.length,
+            high_score: score > highScore ? score : highScore,
+          });
+
           if (updateStats) {
             updateStats("snake", {
               score,
@@ -109,6 +118,15 @@ function SnakeGame({ updateStats }) {
         setTimeout(() => {
           setScore((s) => s + 10);
           setFood(generateFood());
+
+          // Track food eaten event with analytics
+          trackGameEvent("snake", "food_eaten", {
+            score: score + 10,
+            new_length: newSnake.length,
+            position_x: head.x,
+            position_y: head.y,
+          });
+
           // Update current length stat when snake grows, but don't increment played
           if (updateStats) {
             updateStats("snake", {
@@ -220,6 +238,13 @@ function SnakeGame({ updateStats }) {
     setGameOver(false);
     setScore(0);
     setPaused(false);
+
+    // Track game reset event
+    trackGameEvent("snake", "game_reset", {
+      from_game_over: gameOver,
+      previous_score: score,
+      previous_length: snake.length,
+    });
 
     // Reset game loop
     clearInterval(gameLoopRef.current);

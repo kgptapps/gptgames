@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import TicTacToe from "./TicTacToe";
 import NumberGuessGame from "./NumberGuessGame";
 import PuzzleGame from "./PuzzleGame";
@@ -11,14 +11,35 @@ import SnakeGame from "./SnakeGame";
 import { buildInfo } from "./buildInfo";
 import StatusBar from "./StatusBar";
 import useGameStats from "./hooks/useGameStats";
+import { trackGameEvent, trackGameChange } from "./utils/analytics";
 import "./App.css";
 
 export default function App() {
   const [tab, setTab] = useState("tictactoe");
   const [showBuildInfo, setShowBuildInfo] = useState(false);
   const [gameStats, updateStats] = useGameStats();
+  const previousTabRef = useRef("tictactoe");
 
   const formattedDate = new Date(buildInfo.timestamp).toLocaleString();
+
+  // Track initial page load
+  useEffect(() => {
+    trackGameEvent("app", "page_load", {
+      initial_game: tab,
+      build_version: buildInfo.version,
+      build_number: buildInfo.buildNumber,
+    });
+  }, []);
+
+  // Handle game tab changes with tracking
+  const changeTab = useCallback((newTab) => {
+    const prevTab = previousTabRef.current;
+    if (newTab !== prevTab) {
+      trackGameChange(prevTab, newTab);
+      previousTabRef.current = newTab;
+      setTab(newTab);
+    }
+  }, []);
 
   const toggleBuildInfo = () => {
     setShowBuildInfo(!showBuildInfo);
@@ -47,55 +68,55 @@ export default function App() {
         <div className="tabs">
           <button
             className={tab === "tictactoe" ? "tab active" : "tab"}
-            onClick={() => setTab("tictactoe")}
+            onClick={() => changeTab("tictactoe")}
           >
             Tic Tac Toe
           </button>
           <button
             className={tab === "guess" ? "tab active" : "tab"}
-            onClick={() => setTab("guess")}
+            onClick={() => changeTab("guess")}
           >
             Number Guess
           </button>
           <button
             className={tab === "puzzle" ? "tab active" : "tab"}
-            onClick={() => setTab("puzzle")}
+            onClick={() => changeTab("puzzle")}
           >
             Puzzle
           </button>
           <button
             className={tab === "color" ? "tab active" : "tab"}
-            onClick={() => setTab("color")}
+            onClick={() => changeTab("color")}
           >
             Color Match
           </button>
           <button
             className={tab === "word" ? "tab active" : "tab"}
-            onClick={() => setTab("word")}
+            onClick={() => changeTab("word")}
           >
             Word Scramble
           </button>
           <button
             className={tab === "memory" ? "tab active" : "tab"}
-            onClick={() => setTab("memory")}
+            onClick={() => changeTab("memory")}
           >
             Memory Match
           </button>
           <button
             className={tab === "typing" ? "tab active" : "tab"}
-            onClick={() => setTab("typing")}
+            onClick={() => changeTab("typing")}
           >
             Speed Typing
           </button>
           <button
             className={tab === "simon" ? "tab active" : "tab"}
-            onClick={() => setTab("simon")}
+            onClick={() => changeTab("simon")}
           >
             Simon Says
           </button>
           <button
             className={tab === "snake" ? "tab active" : "tab"}
-            onClick={() => setTab("snake")}
+            onClick={() => changeTab("snake")}
           >
             Snake
           </button>

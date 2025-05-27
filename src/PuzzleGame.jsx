@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import withGameStats from "./hooks/withGameStats";
+import { trackGameEvent } from "./utils/analytics";
 
 const imageList = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
@@ -331,11 +332,29 @@ function PuzzleGame({ updateStats }) {
   const solutionRef = useRef([]);
   const previousTilesRef = useRef(tiles);
 
+  // Add a ref to track when the user started the current puzzle
+  const startTimeRef = useRef(Date.now());
+
+  // Track when the game is first loaded
   useEffect(() => {
-    if (won && updateStats) {
-      updateStats("puzzle", { solved: true });
+    trackGameEvent("puzzle", "game_loaded", {
+      image_index: imageIdx,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (won) {
+      // Track puzzle solved event
+      trackGameEvent("puzzle", "solved", {
+        moves: moves,
+        time_spent: Math.floor((Date.now() - startTimeRef.current) / 1000),
+      });
+
+      if (updateStats) {
+        updateStats("puzzle", { solved: true });
+      }
     }
-  }, [won, updateStats]);
+  }, [won, moves, updateStats]);
 
   // Reset solution path when tiles change (not from hint) or when puzzle is solved
   useEffect(() => {
@@ -386,11 +405,13 @@ function PuzzleGame({ updateStats }) {
   }
 
   function handleRestart() {
+    trackGameEvent("puzzle", "restart", { previous_moves: moves });
     setTiles(shuffle(solved));
     setMoves(0);
     setWon(false);
     solutionRef.current = [];
     setSolutionPath([]);
+    startTimeRef.current = Date.now();
   }
 
   function handleNewImage() {
@@ -398,6 +419,13 @@ function PuzzleGame({ updateStats }) {
     while (nextIdx === imageIdx && imageList.length > 1) {
       nextIdx = Math.floor(Math.random() * imageList.length);
     }
+
+    // Track image change
+    trackGameEvent("puzzle", "change_image", {
+      image_type: "builtin",
+      image_index: nextIdx,
+    });
+
     setImageIdx(nextIdx);
     setCustomImage(null);
     setRandomImage(null);
@@ -406,6 +434,7 @@ function PuzzleGame({ updateStats }) {
     setWon(false);
     solutionRef.current = [];
     setSolutionPath([]);
+    startTimeRef.current = Date.now();
   }
 
   function handleUpload(e) {
@@ -438,6 +467,12 @@ function PuzzleGame({ updateStats }) {
 
   function handleHint() {
     console.log("[PuzzleGame] Current tiles state:", tiles);
+
+    // Track hint usage
+    trackGameEvent("puzzle", "use_hint", {
+      current_moves: moves,
+      is_solved: isSolved(tiles),
+    });
 
     // Check if the current state is already solved
     if (isSolved(tiles)) {

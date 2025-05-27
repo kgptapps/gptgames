@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { trackGameStats } from "../utils/analytics";
 
 /**
  * Custom hook for tracking game statistics
@@ -48,32 +49,52 @@ export default function useGameStats() {
       // Create a copy of the previous game stats
       const updated = { ...prevGame };
 
+      // Track analytics data
+      const analyticsData = {};
+
       // Increment played count unless explicitly set in payload
       if (!("played" in payload)) {
         updated.played = (updated.played || 0) + 1;
+        analyticsData.played = 1; // Track as an increment
+      } else if (payload.played > 0) {
+        updated.played = (updated.played || 0) + payload.played;
+        analyticsData.played = payload.played;
       }
 
       // Update specific stats based on payload type
       Object.entries(payload).forEach(([key, value]) => {
+        // Skip 'played' as we've already handled it
+        if (key === "played") return;
+
         // Handle numeric values by adding them
         if (typeof value === "number") {
           updated[key] = (updated[key] || 0) + value;
+          analyticsData[key] = value;
         }
         // Handle boolean values by incrementing if true
         else if (typeof value === "boolean") {
           if (value) {
             updated[key] = (updated[key] || 0) + 1;
+            analyticsData[key] = true;
           }
         }
         // For "best" scores, only update if the new value is higher
         else if (key === "best" && typeof value === "number") {
-          updated.best = Math.max(updated.best || 0, value);
+          const newBest = Math.max(updated.best || 0, value);
+          if (newBest > (updated.best || 0)) {
+            updated.best = newBest;
+            analyticsData.best = newBest;
+          }
         }
         // For other values, just set them directly
         else {
           updated[key] = value;
+          analyticsData[key] = value;
         }
       });
+
+      // Send analytics for the updated stats
+      trackGameStats(gameKey, analyticsData);
 
       // Return the updated stats object
       return { ...prev, [gameKey]: updated };
