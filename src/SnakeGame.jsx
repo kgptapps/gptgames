@@ -335,7 +335,7 @@ function SnakeGame({ updateStats }) {
             />
           ))}
         </div>
-        
+
         {/* Controls for mobile/touch - now on the right side */}
         <div className="side-controls">
           <div className="touch-controls">

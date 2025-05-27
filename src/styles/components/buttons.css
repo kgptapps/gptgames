@@ -77,7 +77,7 @@ button:focus-visible {
     margin-right: 0.5rem;
     text-align: center;
   }
-  
+
   .game-button.active {
     border-left: none;
     background-color: var(--primary-color);
