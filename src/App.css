@@ -6,6 +6,253 @@
   height: 100vh;
 }
 
+/* Copilot Banner Styles */
+.copilot-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #1e293b;
+  color: #fff;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.copilot-banner:not(.copilot-minimized) {
+  max-height: 100vh;
+  position: fixed;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.copilot-banner-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.copilot-banner-content.minimized {
+  padding: 0;
+  width: 100%;
+}
+
+.copilot-minimized {
+  height: 40px;
+  opacity: 0.95;
+  overflow: visible;
+  transition: background-color 0.3s ease;
+}
+
+.copilot-banner.copilot-minimized:hover {
+  background-color: #2d3748;
+  max-height: none;
+  z-index: 1000;
+}
+
+.expand-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: #38bdf8;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  height: 40px;
+  transition: all 0.2s ease;
+}
+
+.expand-button:hover {
+  background-color: #273244;
+  color: #60daff;
+}
+
+.expand-icon {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.expand-button:hover .expand-icon {
+  transform: translateY(2px);
+}
+
+.banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.75rem;
+}
+
+.banner-header h2 {
+  margin: 0;
+  color: #38bdf8;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.close-button,
+.minimize-button {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+}
+
+.close-button:hover,
+.minimize-button:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.banner-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ai-models {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 0.75rem;
+}
+
+.ai-model {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ai-divider {
+  margin: 0 0.25rem;
+  color: #64748b;
+}
+
+.features-section {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.banner-body h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+
+.banner-body ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.banner-body li {
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border-left: 3px solid #3b82f6;
+}
+
+.banner-body li p {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.banner-body strong {
+  color: #38bdf8;
+  font-size: 0.95rem;
+}
+
+.disclaimer {
+  font-style: italic;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+}
+
+.disclaimer strong {
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+/* Responsive styles for the banner */
+@media (max-width: 768px) {
+  .banner-body ul {
+    grid-template-columns: 1fr;
+  }
+
+  .copilot-banner-content {
+    padding: 0.75rem;
+  }
+
+  .banner-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .features-section ul {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .copilot-minimized {
+    height: 42px;
+  }
+
+  .app-container {
+    padding-top: 42px;
+  }
+
+  .expand-button {
+    font-size: 0.8rem;
+  }
+
+  .expand-button {
+    font-size: 0.85rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
 /* Header styles removed */
 
 .build-info-modal {
@@ -200,6 +447,8 @@ h1 {
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  padding-top: 40px; /* Space for the fixed minimized banner */
+  position: relative;
 }
 
 .sidebar {

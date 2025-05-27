@@ -10,6 +10,7 @@ import SimonSaysGame from "./SimonSaysGame";
 import SnakeGame from "./SnakeGame";
 import { buildInfo } from "./buildInfo";
 import StatusBar from "./StatusBar";
+import CopilotBanner from "./components/CopilotBanner";
 import useGameStats from "./hooks/useGameStats";
 import { trackGameEvent, trackGameChange } from "./utils/analytics";
 import "./App.css";
@@ -47,6 +48,7 @@ export default function App() {
 
   return (
     <div className="app-container">
+      <CopilotBanner />
       {showBuildInfo && (
         <div className="build-info-modal">
           <div className="build-info-content">
