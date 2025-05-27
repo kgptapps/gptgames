@@ -34,10 +34,35 @@ A collection of browser-based games built with React and Vite, including Tic Tac
 3. Open your browser to the local address shown in the terminal (usually http://localhost:5173).
 
 ## How to Play
-- Click on a square to make your move (X).
-- The computer (O) will respond automatically.
-- The game announces the winner or a draw.
-- Click "Restart" to play again.
+
+### Tic Tac Toe
+- Choose a difficulty level: Easy, Medium, or Hard
+- Click on a square to make your move (X)
+- The computer (O) will respond automatically with varying intelligence based on difficulty
+- The game tracks your score across multiple rounds
+- Winning squares are highlighted with animation
+- Click "New Game" to play again
+
+## Deployment
+
+This project is automatically deployed to GitHub Pages via GitHub Actions whenever changes are pushed to the master branch.
+
+### Automatic Deployment
+The project uses a GitHub Actions workflow defined in `.github/workflows/deploy.yml` that:
+1. Builds the project
+2. Updates build information (version, timestamp)
+3. Deploys to GitHub Pages using the gh-pages branch
+
+To deploy manually:
+```bash
+npm run manual-deploy
+```
+
+### Version Display
+The application shows its current version in the top-right corner. Click on it to see detailed build information including:
+- Version number
+- Build timestamp
+- Build number
 
 ---
 

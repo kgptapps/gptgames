@@ -4,4 +4,6 @@ This project is a React-based Tic Tac Toe game where one player is the computer.
 Focus on clean, modern UI and simple AI for the computer player.
 Use functional components and hooks where possible.
 
+Maintain all styles to a common styles file for consistency.
+
 If a file grows more than 200 lines, consider splitting it into smaller components.
