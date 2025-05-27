@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 
 function getExtraTip(target, history, finished) {
   if (history.length === 0) return "";
@@ -23,7 +24,7 @@ function getExtraTip(target, history, finished) {
   return "";
 }
 
-export default function NumberGuessGame({ updateStats }) {
+function NumberGuessGame({ updateStats }) {
   const [target, setTarget] = useState(
     () => Math.floor(Math.random() * 100) + 1
   );
@@ -38,13 +39,16 @@ export default function NumberGuessGame({ updateStats }) {
 
   useEffect(() => {
     if (gameOver && updateStats) {
-      updateStats("guess", { win: isWin });
+      updateStats("guess", {
+        win: isWin,
+        loss: attempts >= 10 && !isWin,
+      });
     }
     // Reset gameOver when a new game starts
     if (!finished) {
       setGameOver(false);
     }
-  }, [gameOver, isWin, updateStats, finished]);
+  }, [gameOver, isWin, attempts, updateStats, finished]);
 
   const handleGuess = (e) => {
     e.preventDefault();
@@ -132,3 +136,13 @@ export default function NumberGuessGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(NumberGuessGame, {
+  gameKey: "guess",
+  supportedStats: ["wins", "losses", "played"],
+  displayNames: {
+    wins: "Wins",
+    losses: "Losses",
+    played: "Games Played",
+  },
+});

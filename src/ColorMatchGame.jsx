@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 
 const COLORS = ["#36d1c4", "#4f8cff", "#9651ff", "#ff4e50", "#7ad236"];
 
-export default function ColorMatchGame({ updateStats }) {
+function ColorMatchGame({ updateStats }) {
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(30);
   const [gameOver, setGameOver] = useState(false);
@@ -12,6 +13,7 @@ export default function ColorMatchGame({ updateStats }) {
   const [feedback, setFeedback] = useState("");
   const [roundOver, setRoundOver] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [currentScore, setCurrentScore] = useState(0); // Ensure currentScore is always defined
 
   const colorNames = ["Blue", "Red", "Green", "Cyan", "Purple"];
   const colorValues = {
@@ -80,14 +82,23 @@ export default function ColorMatchGame({ updateStats }) {
     }
   }, [roundOver, isCorrect, updateStats]);
 
-  // Call updateStats when a correct match is made
+  // Call updateStats when a round is completed
   useEffect(() => {
-    if (isCorrect !== null && updateStats) {
-      updateStats("color", { correct: isCorrect });
+    if (
+      typeof currentScore !== "undefined" &&
+      isCorrect !== null &&
+      updateStats
+    ) {
+      const score = isCorrect ? currentScore : 0;
+      updateStats("color", {
+        correct: isCorrect,
+        played: true,
+        best: score, // The hook will only update 'best' if this is higher than previous best
+      });
     }
     // Only run when isCorrect changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCorrect]);
+  }, [isCorrect, currentScore]);
 
   const handleAnswer = (answer) => {
     if (gameOver) return;
@@ -160,3 +171,14 @@ export default function ColorMatchGame({ updateStats }) {
     </div>
   );
 }
+
+// Export the component wrapped with stats capabilities
+export default withGameStats(ColorMatchGame, {
+  gameKey: "color",
+  supportedStats: ["correct", "best", "played"],
+  displayNames: {
+    correct: "Correct Matches",
+    best: "Best Score",
+    played: "Games Played",
+  },
+});

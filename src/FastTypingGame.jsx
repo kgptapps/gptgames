@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import withGameStats from "./hooks/withGameStats";
 
-export default function FastTypingGame({ updateStats }) {
+function FastTypingGame({ updateStats }) {
   const [text, setText] = useState("");
   const [userInput, setUserInput] = useState("");
   const [correctChars, setCorrectChars] = useState(0);
@@ -94,6 +95,13 @@ export default function FastTypingGame({ updateStats }) {
   useEffect(() => {
     if (!gameActive && updateStats) {
       updateStats("typing", { completed: true });
+    }
+  }, [gameActive, updateStats]);
+
+  // Call updateStats when a typing session is completed
+  useEffect(() => {
+    if (!gameActive && updateStats) {
+      updateStats("typing", { solved: true });
     }
   }, [gameActive, updateStats]);
 
@@ -242,3 +250,12 @@ export default function FastTypingGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(FastTypingGame, {
+  gameKey: "typing",
+  supportedStats: ["solved", "played"],
+  displayNames: {
+    solved: "Solved",
+    played: "Games Played",
+  },
+});

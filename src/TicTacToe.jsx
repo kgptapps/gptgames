@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 import {
   emptyBoard,
   calculateWinner,
@@ -12,7 +13,7 @@ import GameInfo from "./components/GameInfo";
  * TicTacToe Game Component
  * The main component that manages game state and logic
  */
-export default function TicTacToe({ updateStats }) {
+function TicTacToe({ updateStats }) {
   // Game state
   const [board, setBoard] = useState(emptyBoard);
   const [xIsNext, setXIsNext] = useState(true);
@@ -72,8 +73,11 @@ export default function TicTacToe({ updateStats }) {
     if ((winner || isDraw) && !gameOver) {
       setGameOver(true);
       if (updateStats) {
+        // For TicTacToe, we track wins (when player X wins), losses (when O wins),
+        // and draws. We also implicitly track total games played.
         updateStats("tictactoe", {
           win: winner === "X",
+          loss: winner === "O",
           draw: isDraw,
         });
       }
@@ -128,3 +132,15 @@ export default function TicTacToe({ updateStats }) {
     </div>
   );
 }
+
+// Export the component wrapped with stats capabilities
+export default withGameStats(TicTacToe, {
+  gameKey: "tictactoe",
+  supportedStats: ["wins", "losses", "draws", "played"],
+  displayNames: {
+    wins: "Wins",
+    losses: "Losses",
+    draws: "Draws",
+    played: "Games Played",
+  },
+});

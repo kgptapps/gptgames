@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 
 // Words organized by difficulty
 const WORD_LEVELS = {
@@ -40,7 +41,7 @@ const WORD_LEVELS = {
   ],
 };
 
-export default function WordScrambleGame({ updateStats }) {
+function WordScrambleGame({ updateStats }) {
   const [score, setScore] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
   const [scrambledWord, setScrambledWord] = useState("");
@@ -314,3 +315,12 @@ export default function WordScrambleGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(WordScrambleGame, {
+  gameKey: "word",
+  supportedStats: ["solved", "played"],
+  displayNames: {
+    solved: "Solved",
+    played: "Games Played",
+  },
+});

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 
 const imageList = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
@@ -19,7 +20,7 @@ function shuffle(arr) {
   return a;
 }
 
-export default function PuzzleGame({ updateStats }) {
+function PuzzleGame({ updateStats }) {
   const size = 3;
   const total = size * size;
   const solved = Array.from({ length: total }, (_, i) => i);
@@ -161,3 +162,12 @@ export default function PuzzleGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(PuzzleGame, {
+  gameKey: "puzzle",
+  supportedStats: ["solved", "played"],
+  displayNames: {
+    solved: "Solved",
+    played: "Games Played",
+  },
+});

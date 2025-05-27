@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import withGameStats from "./hooks/withGameStats";
 
-export default function MemoryMatchGame({ updateStats }) {
+function MemoryMatchGame({ updateStats }) {
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
@@ -121,3 +122,12 @@ export default function MemoryMatchGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(MemoryMatchGame, {
+  gameKey: "memory",
+  supportedStats: ["solved", "played"],
+  displayNames: {
+    solved: "Solved",
+    played: "Games Played",
+  },
+});

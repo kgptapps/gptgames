@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import withGameStats from "./hooks/withGameStats";
 
-export default function SimonSaysGame({ updateStats }) {
+function SimonSaysGame({ updateStats }) {
   const [gameSequence, setGameSequence] = useState([]);
   const [playerSequence, setPlayerSequence] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -251,3 +252,12 @@ export default function SimonSaysGame({ updateStats }) {
     </div>
   );
 }
+
+export default withGameStats(SimonSaysGame, {
+  gameKey: "simon",
+  supportedStats: ["best", "played"],
+  displayNames: {
+    best: "Best",
+    played: "Games Played",
+  },
+});
