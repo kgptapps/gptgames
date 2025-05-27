@@ -8,6 +8,10 @@
 .app-header {
   margin-bottom: 2rem;
   position: relative;
+  background-color: #f0f0ff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .app-header h1 {
