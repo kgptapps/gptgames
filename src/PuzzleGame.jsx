@@ -29,6 +29,8 @@ export default function PuzzleGame() {
   const [tiles, setTiles] = useState(() => shuffle(solved));
   const [moves, setMoves] = useState(0);
   const [won, setWon] = useState(false);
+  const [customImage, setCustomImage] = useState(null);
+  const [randomImage, setRandomImage] = useState(null);
 
   function canMove(idx) {
     const empty = tiles.indexOf(total - 1);
@@ -64,6 +66,32 @@ export default function PuzzleGame() {
       nextIdx = Math.floor(Math.random() * imageList.length);
     }
     setImageIdx(nextIdx);
+    setCustomImage(null);
+    setRandomImage(null);
+    setTiles(shuffle(solved));
+    setMoves(0);
+    setWon(false);
+  }
+
+  function handleUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setCustomImage(ev.target.result);
+      setRandomImage(null);
+      setTiles(shuffle(solved));
+      setMoves(0);
+      setWon(false);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleRandomImage() {
+    // Use Lorem Picsum for a random image
+    const url = `https://picsum.photos/400?random=${Date.now()}`;
+    setRandomImage(url);
+    setCustomImage(null);
     setTiles(shuffle(solved));
     setMoves(0);
     setWon(false);
@@ -73,6 +101,23 @@ export default function PuzzleGame() {
     <div className="puzzle-game-container">
       <h2>Image Puzzle</h2>
       <p>Rearrange the tiles to recreate the image!</p>
+      <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+        <button className="restart" onClick={handleNewImage}>
+          Next Built-in Image
+        </button>
+        <button className="restart" onClick={handleRandomImage}>
+          Random Internet Image
+        </button>
+        <label className="restart" style={{ cursor: "pointer", margin: 0 }}>
+          Upload Image
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleUpload}
+          />
+        </label>
+      </div>
       <div className="puzzle-board">
         {tiles.map((tile, idx) => (
           <button
@@ -82,7 +127,9 @@ export default function PuzzleGame() {
             style={
               tile !== total - 1
                 ? {
-                    backgroundImage: `url(${imageList[imageIdx]})`,
+                    backgroundImage: `url(${
+                      customImage || randomImage || imageList[imageIdx]
+                    })`,
                     backgroundSize: `${size * 100}% ${size * 100}%`,
                     backgroundPosition: `${
                       ((tile % size) * 100) / (size - 1)
@@ -103,9 +150,6 @@ export default function PuzzleGame() {
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
         <button className="restart" onClick={handleRestart}>
           Shuffle
-        </button>
-        <button className="restart" onClick={handleNewImage}>
-          New Image
         </button>
       </div>
     </div>
