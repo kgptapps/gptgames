@@ -1,4 +1,4 @@
-name: Build for GitHub Pages
+name: Build and Deploy
 
 on:
   push:
@@ -8,10 +8,17 @@ on:
 # Set permissions
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build
+  build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -36,9 +43,14 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Archive Build Artifact
-        uses: actions/upload-artifact@v3
+      # Deploy using gh-pages directly
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: dist
-          path: dist
-          retention-days: 1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          enable_jekyll: false
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "Deploy to GitHub Pages [skip ci]"
