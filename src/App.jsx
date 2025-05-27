@@ -7,14 +7,47 @@ import WordScrambleGame from "./WordScrambleGame";
 import MemoryMatchGame from "./MemoryMatchGame";
 import FastTypingGame from "./FastTypingGame";
 import SimonSaysGame from "./SimonSaysGame";
+import { buildInfo } from "./buildInfo";
 import "./App.css";
 
 export default function App() {
   const [tab, setTab] = useState("tictactoe");
+  const [showBuildInfo, setShowBuildInfo] = useState(false);
+
+  // Get version from build info
+  const version = buildInfo.version;
+
+  // Format the build timestamp for display
+  const formattedDate = new Date(buildInfo.timestamp).toLocaleString();
+
+  const toggleBuildInfo = () => {
+    setShowBuildInfo(!showBuildInfo);
+  };
+
   return (
     <div>
       <header className="app-header">
         <h1>Kannaiyan's Copilot Games</h1>
+        <span className="version-badge" onClick={toggleBuildInfo}>
+          v{version}
+        </span>
+        {showBuildInfo && (
+          <div className="build-info-modal">
+            <div className="build-info-content">
+              <h3>Build Information</h3>
+              <p>
+                <strong>Version:</strong> {buildInfo.version}
+              </p>
+              <p>
+                <strong>Build Date:</strong> {formattedDate}
+              </p>
+              <p>
+                <strong>Build Number:</strong> {buildInfo.buildNumber}
+              </p>
+              <button onClick={toggleBuildInfo}>Close</button>
+            </div>
+          </div>
+        )}
       </header>
       <div className="tabs">
         <button

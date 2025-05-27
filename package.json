@@ -1,12 +1,12 @@
 {
   "name": "tictactoe",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "homepage": "https://kgptapps.github.io/gptgames/",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node scripts/update-build-info.js && vite",
+    "build": "node scripts/update-build-info.js && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
