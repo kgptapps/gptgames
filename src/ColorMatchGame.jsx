@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import withGameStats from "./hooks/withGameStats";
+import { useActiveGame } from "./context/ActiveGameContext";
 
 const COLORS = ["#36d1c4", "#4f8cff", "#9651ff", "#ff4e50", "#7ad236"];
 
 function ColorMatchGame({ updateStats }) {
+  const { updateActiveGame, activeGame } = useActiveGame();
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(30);
   const [gameOver, setGameOver] = useState(false);
@@ -75,6 +77,14 @@ function ColorMatchGame({ updateStats }) {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    // Only set active game if not already set to 'color' and only on mount
+    if (activeGame !== "color") {
+      updateActiveGame("color");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
 
   useEffect(() => {
     if (roundOver && updateStats) {

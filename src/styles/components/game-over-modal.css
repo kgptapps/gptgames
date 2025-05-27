@@ -1,0 +1,30 @@
+/* Game Over Modal Styles */
+.game-over-modal {
+  margin: 20px 0;
+  padding: 20px;
+  background: #e0e7ff;
+  border-radius: 12px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.game-over-modal h2 {
+  margin-top: 0;
+  color: #4338ca;
+}
+
+.game-over-modal p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

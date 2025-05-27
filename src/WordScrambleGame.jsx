@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import withGameStats from "./hooks/withGameStats";
+import { useActiveGame } from "./context/ActiveGameContext";
 
 // Words organized by difficulty
 const WORD_LEVELS = {
@@ -42,6 +43,9 @@ const WORD_LEVELS = {
 };
 
 function WordScrambleGame({ updateStats }) {
+  const { updateActiveGame, activeGame } = useActiveGame();
+  const didSetActive = useRef(false);
+
   const [score, setScore] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
   const [scrambledWord, setScrambledWord] = useState("");
@@ -73,6 +77,14 @@ function WordScrambleGame({ updateStats }) {
       updateStats("word", { solved: true });
     }
   }, [solved, updateStats]);
+
+  useEffect(() => {
+    // Only set active game if not already set to 'word' and only on mount
+    if (activeGame !== "word") {
+      updateActiveGame("word");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
 
   // Pick a random word and scramble it
   const generateNewWord = () => {

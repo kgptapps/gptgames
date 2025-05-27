@@ -1,0 +1,144 @@
+/* Memory Match Game Specific Styles */
+@import "../games/base.css";
+
+.memory-game-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.memory-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 30px auto;
+  max-width: 500px;
+}
+
+/* Grid layouts for different difficulty levels */
+.memory-grid.easy {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 380px;
+}
+
+.memory-grid.medium {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.memory-grid.hard {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 520px;
+}
+
+.memory-card {
+  width: 100px;
+  height: 100px;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.memory-card:hover {
+  transform: scale(1.05);
+}
+
+.memory-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.memory-card.flipped .memory-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Animation for matched cards */
+@keyframes pulse {
+  0% {
+    transform: scale(1) rotateY(180deg);
+  }
+  50% {
+    transform: scale(1.1) rotateY(180deg);
+  }
+  100% {
+    transform: scale(1) rotateY(180deg);
+  }
+}
+
+.memory-card-front,
+.memory-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-card-front {
+  background: linear-gradient(135deg, #36d1c4 0%, #4f8cff 100%);
+}
+
+.memory-card-back {
+  background: white;
+  border: 2px solid #4f8cff;
+  transform: rotateY(180deg);
+}
+
+.memory-card.matched .memory-card-back {
+  background: #e0f2fe;
+  border-color: #36d1c4;
+  box-shadow: 0 0 10px #4f8cff;
+}
+
+.memory-card-content {
+  font-size: 3rem;
+}
+
+.memory-game-over {
+  margin: 20px 0;
+  padding: 20px;
+  background: #e0e7ff;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .memory-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 360px;
+  }
+
+  .memory-card {
+    width: 80px;
+    height: 80px;
+  }
+
+  .memory-card-content {
+    font-size: 2.5rem;
+  }
+}

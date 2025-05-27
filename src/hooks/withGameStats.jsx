@@ -1,4 +1,5 @@
 import React from "react";
+import { useGameStatsContext } from "../context/GameStatsContext";
 
 /**
  * Higher-order component that wraps a game with standardized stats handling
@@ -8,15 +9,18 @@ import React from "react";
  */
 export const withGameStats = (WrappedComponent, statsConfig) => {
   const WithGameStats = (props) => {
+    // Get context values
+    const { registerStats, updateStats } = useGameStatsContext();
+
     // Register supported stats with the provider
     React.useEffect(() => {
-      if (props.registerStats && statsConfig) {
-        props.registerStats(statsConfig);
+      if (registerStats && statsConfig) {
+        registerStats(statsConfig);
       }
-    }, [props.registerStats]);
+    }, [registerStats]);
 
     // Pass the updateStats function to the wrapped component
-    return <WrappedComponent {...props} />;
+    return <WrappedComponent {...props} updateStats={updateStats} />;
   };
 
   WithGameStats.displayName = `WithGameStats(${getDisplayName(

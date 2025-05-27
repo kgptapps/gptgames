@@ -1,0 +1,82 @@
+/* Timer Component Styles */
+
+.game-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  background: #f0f9ff;
+  border-radius: 8px;
+  border: 1px solid #bae6fd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin: 0.5rem 0;
+}
+
+.timer-label {
+  font-weight: 500;
+  color: #0369a1;
+}
+
+.timer-value {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+/* Compact timer for status bar */
+.game-timer.compact {
+  padding: 4px 8px;
+  margin: 0;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+}
+
+.game-timer.compact .timer-label {
+  font-size: 0.75rem;
+  margin-right: 4px;
+}
+
+.game-timer.compact .timer-value {
+  font-size: 0.85rem;
+}
+
+/* Timer variations */
+.game-timer.countdown {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.game-timer.countdown .timer-label {
+  color: #b91c1c;
+}
+
+.game-timer.countdown .timer-value {
+  color: #dc2626;
+}
+
+.game-timer.large .timer-value {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .game-timer {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .timer-value {
+    font-size: 1rem;
+  }
+
+  .game-timer.compact {
+    padding: 2px 6px;
+  }
+
+  .game-timer.compact .timer-value {
+    font-size: 0.8rem;
+  }
+}
