@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function FastTypingGame() {
+export default function FastTypingGame({ updateStats }) {
   const [text, setText] = useState("");
   const [userInput, setUserInput] = useState("");
   const [correctChars, setCorrectChars] = useState(0);
@@ -90,6 +90,12 @@ export default function FastTypingGame() {
       }
     }
   }, [gameActive, correctChars, timeLeft, totalTyped]);
+
+  useEffect(() => {
+    if (!gameActive && updateStats) {
+      updateStats("typing", { completed: true });
+    }
+  }, [gameActive, updateStats]);
 
   // Handle user input
   const handleInputChange = (e) => {

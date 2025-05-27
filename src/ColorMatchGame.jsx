@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const COLORS = ["#36d1c4", "#4f8cff", "#9651ff", "#ff4e50", "#7ad236"];
 
-export default function ColorMatchGame() {
+export default function ColorMatchGame({ updateStats }) {
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(30);
   const [gameOver, setGameOver] = useState(false);
@@ -10,6 +10,8 @@ export default function ColorMatchGame() {
   const [displayColor, setDisplayColor] = useState("");
   const [colorOptions, setColorOptions] = useState([]);
   const [feedback, setFeedback] = useState("");
+  const [roundOver, setRoundOver] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const colorNames = ["Blue", "Red", "Green", "Cyan", "Purple"];
   const colorValues = {
@@ -53,6 +55,7 @@ export default function ColorMatchGame() {
     // Shuffle options
     options = options.sort(() => Math.random() - 0.5);
     setColorOptions(options);
+    setRoundOver(false);
   };
 
   useEffect(() => {
@@ -71,6 +74,12 @@ export default function ColorMatchGame() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (roundOver && updateStats) {
+      updateStats("color", { correct: isCorrect });
+    }
+  }, [roundOver, isCorrect, updateStats]);
+
   const handleAnswer = (answer) => {
     if (gameOver) return;
 
@@ -82,12 +91,15 @@ export default function ColorMatchGame() {
     if (answer === correctAnswer) {
       setScore((prev) => prev + 1);
       setFeedback("Correct! +1 point");
+      setIsCorrect(true);
       setTimeout(() => setFeedback(""), 1000);
     } else {
       setFeedback("Wrong! The display color was " + correctAnswer);
+      setIsCorrect(false);
       setTimeout(() => setFeedback(""), 1500);
     }
 
+    setRoundOver(true);
     initRound();
   };
 

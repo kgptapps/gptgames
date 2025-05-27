@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function MemoryMatchGame() {
+export default function MemoryMatchGame({ updateStats }) {
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
@@ -71,6 +71,12 @@ export default function MemoryMatchGame() {
       setGameOver(true);
     }
   }, [matched, cards]);
+
+  useEffect(() => {
+    if (gameOver && updateStats) {
+      updateStats("memory", { solved: true });
+    }
+  }, [gameOver, updateStats]);
 
   return (
     <div className="game-container memory-game-container">

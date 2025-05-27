@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function getExtraTip(target, history, finished) {
   if (history.length === 0) return "";
@@ -23,7 +23,7 @@ function getExtraTip(target, history, finished) {
   return "";
 }
 
-export default function NumberGuessGame() {
+export default function NumberGuessGame({ updateStats }) {
   const [target, setTarget] = useState(
     () => Math.floor(Math.random() * 100) + 1
   );
@@ -33,6 +33,18 @@ export default function NumberGuessGame() {
   const [finished, setFinished] = useState(false);
   const [history, setHistory] = useState([]);
   const [hint, setHint] = useState("");
+  const [gameOver, setGameOver] = useState(false);
+  const [isWin, setIsWin] = useState(false);
+
+  useEffect(() => {
+    if (gameOver && updateStats) {
+      updateStats("guess", { win: isWin });
+    }
+    // Reset gameOver when a new game starts
+    if (!finished) {
+      setGameOver(false);
+    }
+  }, [gameOver, isWin, updateStats, finished]);
 
   const handleGuess = (e) => {
     e.preventDefault();
@@ -50,6 +62,8 @@ export default function NumberGuessGame() {
       );
       setHint("");
       setFinished(true);
+      setGameOver(true);
+      setIsWin(true);
     } else if (num < target) {
       setMessage("Too low!");
       setHint(target - num > 20 ? "Try much higher!" : "A bit higher!");
@@ -68,6 +82,8 @@ export default function NumberGuessGame() {
     setFinished(false);
     setHistory([]);
     setHint("");
+    setGameOver(false);
+    setIsWin(false);
   };
 
   return (

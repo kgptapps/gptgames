@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const imageList = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
@@ -19,7 +19,7 @@ function shuffle(arr) {
   return a;
 }
 
-export default function PuzzleGame() {
+export default function PuzzleGame({ updateStats }) {
   const size = 3;
   const total = size * size;
   const solved = Array.from({ length: total }, (_, i) => i);
@@ -31,6 +31,12 @@ export default function PuzzleGame() {
   const [won, setWon] = useState(false);
   const [customImage, setCustomImage] = useState(null);
   const [randomImage, setRandomImage] = useState(null);
+
+  useEffect(() => {
+    if (won && updateStats) {
+      updateStats("puzzle", { solved: true });
+    }
+  }, [won, updateStats]);
 
   function canMove(idx) {
     const empty = tiles.indexOf(total - 1);

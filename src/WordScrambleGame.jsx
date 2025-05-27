@@ -40,7 +40,7 @@ const WORD_LEVELS = {
   ],
 };
 
-export default function WordScrambleGame() {
+export default function WordScrambleGame({ updateStats }) {
   const [score, setScore] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
   const [scrambledWord, setScrambledWord] = useState("");
@@ -53,6 +53,8 @@ export default function WordScrambleGame() {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [attemptedWords, setAttemptedWords] = useState(0);
 
+  const [solved, setSolved] = useState(false);
+
   // Adaptive difficulty: update level based on player performance
   useEffect(() => {
     if (correctAnswers >= 3 && currentLevel === "easy") {
@@ -64,6 +66,13 @@ export default function WordScrambleGame() {
     }
   }, [correctAnswers, currentLevel]);
 
+  // Call updateStats when a word is solved
+  useEffect(() => {
+    if (solved && updateStats) {
+      updateStats("word", { solved: true });
+    }
+  }, [solved, updateStats]);
+
   // Pick a random word and scramble it
   const generateNewWord = () => {
     const wordPool = WORD_LEVELS[currentLevel];
@@ -71,6 +80,7 @@ export default function WordScrambleGame() {
     setCurrentWord(word);
     setScrambledWord(scrambleWord(word));
     setUserGuess("");
+    setSolved(false);
   };
 
   // Fisher-Yates shuffle algorithm to scramble the word
@@ -103,6 +113,7 @@ export default function WordScrambleGame() {
       setScore(score + pointValue);
       setCorrectAnswers(correctAnswers + 1);
       setMessage(`Correct! +${pointValue} points`);
+      setSolved(true);
       setTimeout(() => {
         generateNewWord();
         setMessage("");
@@ -253,7 +264,11 @@ export default function WordScrambleGame() {
               disabled={score < 2}
             >
               Get Hint (-
-              {currentLevel === "easy" ? 2 : currentLevel === "medium" ? 3 : 4}{" "}
+              {currentLevel === "easy"
+                ? 2
+                : currentLevel === "medium"
+                ? 3
+                : 4}{" "}
               points)
             </button>
             <button

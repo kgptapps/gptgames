@@ -12,13 +12,14 @@ import GameInfo from "./components/GameInfo";
  * TicTacToe Game Component
  * The main component that manages game state and logic
  */
-export default function TicTacToe() {
+export default function TicTacToe({ updateStats }) {
   // Game state
   const [board, setBoard] = useState(emptyBoard);
   const [xIsNext, setXIsNext] = useState(true);
   const [gameHistory, setGameHistory] = useState({ x: 0, o: 0, draw: 0 });
   const [difficulty, setDifficulty] = useState("medium");
   const [isThinking, setIsThinking] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   // Calculate current game state
   const winResult = calculateWinner(board);
@@ -64,6 +65,22 @@ export default function TicTacToe() {
       }));
     }
   }, [winner, board]);
+
+  // Call updateStats when the game ends
+  useEffect(() => {
+    if ((winner || winResult?.draw) && !gameOver) {
+      setGameOver(true);
+      if (updateStats) {
+        updateStats("tictactoe", {
+          win: winner === "X",
+          draw: winResult?.draw,
+        });
+      }
+    }
+    if (!winner && !winResult?.draw && gameOver) {
+      setGameOver(false);
+    }
+  }, [winner, winResult?.draw, updateStats, gameOver]);
 
   // Game restart handler
   const handleRestart = () => {

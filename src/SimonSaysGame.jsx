@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function SimonSaysGame() {
+export default function SimonSaysGame({ updateStats }) {
   const [gameSequence, setGameSequence] = useState([]);
   const [playerSequence, setPlayerSequence] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -36,7 +36,15 @@ export default function SimonSaysGame() {
     if (highScore > 0) {
       localStorage.setItem("simonSaysHighScore", highScore.toString());
     }
-  }, [highScore]); // Start a new game
+  }, [highScore]);
+
+  useEffect(() => {
+    if (gameOver && updateStats && highScore > 0) {
+      updateStats("simon", { best: highScore });
+    }
+  }, [gameOver, highScore, updateStats]);
+
+  // Start a new game
   const startGame = () => {
     setGameSequence([]);
     setPlayerSequence([]);
