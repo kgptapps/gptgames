@@ -1,8 +1,8 @@
-# ChatGPT Generated Games
+# GitHub Copilot Games
 
 ![GitHub Pages Deployment](https://github.com/kgptapps/gptgames/actions/workflows/deploy.yml/badge.svg)
 
-A collection of browser-based games built with React and Vite, including Tic Tac Toe, Fast Typing, Simon Says, and more! You can play these games [online here](https://kgptapps.github.io/gptgames/).
+A collection of browser-based games built with React and Vite, including Tic Tac Toe, Fast Typing, Simon Says, and more! These games were created with GitHub Copilot assistance and can be played [online here](https://kgptapps.github.io/gptgames/).
 
 ## Games Included
 

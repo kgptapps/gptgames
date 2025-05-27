@@ -13,6 +13,9 @@ export default function App() {
   const [tab, setTab] = useState("tictactoe");
   return (
     <div>
+      <header className="app-header">
+        <h1>GitHub Copilot Games</h1>
+      </header>
       <div className="tabs">
         <button
           className={tab === "tictactoe" ? "tab active" : "tab"}
