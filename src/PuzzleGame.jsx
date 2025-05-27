@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import withGameStats from "./hooks/withGameStats";
 
 const imageList = [
@@ -20,18 +20,94 @@ function shuffle(arr) {
   return a;
 }
 
+// Helper to check if board is solved
+function isSolved(board) {
+  for (let i = 0; i < board.length - 1; i++) {
+    if (board[i] !== i + 1) return false;
+  }
+  return board[board.length - 1] === null;
+}
+
+// Helper to get possible moves
+function getPossibleMoves(board, size) {
+  const empty = board.indexOf(null);
+  const row = Math.floor(empty / size);
+  const col = empty % size;
+  const moves = [];
+  const directions = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0],
+  ];
+  for (const [dr, dc] of directions) {
+    const nr = row + dr;
+    const nc = col + dc;
+    if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
+      moves.push(nr * size + nc);
+    }
+  }
+  return moves;
+}
+
+// BFS solver to find shortest path to solution
+function solvePuzzle(startBoard, size) {
+  const queue = [];
+  const visited = new Set();
+  const parent = new Map();
+  const key = (b) => b.join(",");
+  queue.push(startBoard.slice());
+  visited.add(key(startBoard));
+  parent.set(key(startBoard), null);
+  let solution = null;
+  while (queue.length > 0) {
+    const board = queue.shift();
+    if (isSolved(board)) {
+      solution = board;
+      break;
+    }
+    const empty = board.indexOf(null);
+    for (const move of getPossibleMoves(board, size)) {
+      const newBoard = board.slice();
+      newBoard[empty] = newBoard[move];
+      newBoard[move] = null;
+      const k = key(newBoard);
+      if (!visited.has(k)) {
+        visited.add(k);
+        parent.set(k, { prev: key(board), move });
+        queue.push(newBoard);
+      }
+    }
+  }
+  // Reconstruct path
+  if (!solution) return [];
+  let path = [];
+  let k = key(solution);
+  while (parent.get(k) && parent.get(k).prev) {
+    path.unshift(parent.get(k).move);
+    k = parent.get(k).prev;
+  }
+  return path;
+}
+
 function PuzzleGame({ updateStats }) {
   const size = 3;
   const total = size * size;
-  const solved = Array.from({ length: total }, (_, i) => i);
+  // Use 1..8, null for solved state
+  const solved = Array.from({ length: total - 1 }, (_, i) => i + 1).concat([
+    null,
+  ]);
   const [imageIdx, setImageIdx] = useState(() =>
     Math.floor(Math.random() * imageList.length)
   );
+  // Shuffle using new solved array
   const [tiles, setTiles] = useState(() => shuffle(solved));
   const [moves, setMoves] = useState(0);
   const [won, setWon] = useState(false);
   const [customImage, setCustomImage] = useState(null);
   const [randomImage, setRandomImage] = useState(null);
+  const [solutionPath, setSolutionPath] = useState([]);
+  const solutionRef = useRef([]);
 
   useEffect(() => {
     if (won && updateStats) {
@@ -39,8 +115,15 @@ function PuzzleGame({ updateStats }) {
     }
   }, [won, updateStats]);
 
+  useEffect(() => {
+    if (isSolved(tiles)) {
+      solutionRef.current = [];
+      setSolutionPath([]);
+    }
+  }, [tiles]);
+
   function canMove(idx) {
-    const empty = tiles.indexOf(total - 1);
+    const empty = tiles.indexOf(null);
     const row = Math.floor(idx / size);
     const col = idx % size;
     const emptyRow = Math.floor(empty / size);
@@ -53,18 +136,20 @@ function PuzzleGame({ updateStats }) {
 
   function handleTileClick(idx) {
     if (won || !canMove(idx)) return;
-    const empty = tiles.indexOf(total - 1);
+    const empty = tiles.indexOf(null);
     const newTiles = tiles.slice();
     [newTiles[idx], newTiles[empty]] = [newTiles[empty], newTiles[idx]];
     setTiles(newTiles);
     setMoves((m) => m + 1);
-    if (newTiles.every((v, i) => v === i)) setWon(true);
+    if (isSolved(newTiles)) setWon(true);
   }
 
   function handleRestart() {
     setTiles(shuffle(solved));
     setMoves(0);
     setWon(false);
+    solutionRef.current = [];
+    setSolutionPath([]);
   }
 
   function handleNewImage() {
@@ -78,6 +163,8 @@ function PuzzleGame({ updateStats }) {
     setTiles(shuffle(solved));
     setMoves(0);
     setWon(false);
+    solutionRef.current = [];
+    setSolutionPath([]);
   }
 
   function handleUpload(e) {
@@ -90,6 +177,8 @@ function PuzzleGame({ updateStats }) {
       setTiles(shuffle(solved));
       setMoves(0);
       setWon(false);
+      solutionRef.current = [];
+      setSolutionPath([]);
     };
     reader.readAsDataURL(file);
   }
@@ -102,6 +191,36 @@ function PuzzleGame({ updateStats }) {
     setTiles(shuffle(solved));
     setMoves(0);
     setWon(false);
+    solutionRef.current = [];
+    setSolutionPath([]);
+  }
+
+  function handleHint() {
+    // No need to convert, tiles already use null for empty
+    if (!solutionRef.current.length) {
+      // Compute solution path
+      const path = solvePuzzle(tiles, size);
+      console.log("[PuzzleGame] Computed solution path:", path);
+      solutionRef.current = path;
+      setSolutionPath(path);
+    }
+    if (solutionRef.current.length) {
+      const nextMove = solutionRef.current[0];
+      const empty = tiles.indexOf(null);
+      const newTiles = tiles.slice();
+      [newTiles[empty], newTiles[nextMove]] = [
+        newTiles[nextMove],
+        newTiles[empty],
+      ];
+      setTiles(newTiles);
+      setMoves((m) => m + 1);
+      solutionRef.current = solutionRef.current.slice(1);
+      setSolutionPath(solutionRef.current);
+      console.log("[PuzzleGame] Tiles after move:", newTiles);
+      console.log("[PuzzleGame] Remaining solution path:", solutionRef.current);
+    } else {
+      console.log("[PuzzleGame] No solution path found or already solved.");
+    }
   }
 
   return (
@@ -125,28 +244,31 @@ function PuzzleGame({ updateStats }) {
           />
         </label>
       </div>
+      <div className="puzzle-controls">
+        <button onClick={handleHint}>Hint</button>
+      </div>
       <div className="puzzle-board">
         {tiles.map((tile, idx) => (
           <button
             key={idx}
-            className={`puzzle-tile${tile === total - 1 ? " empty" : ""}`}
+            className={`puzzle-tile${tile === null ? " empty" : ""}`}
             onClick={() => handleTileClick(idx)}
             style={
-              tile !== total - 1
+              tile !== null
                 ? {
                     backgroundImage: `url(${
                       customImage || randomImage || imageList[imageIdx]
                     })`,
                     backgroundSize: `${size * 100}% ${size * 100}%`,
                     backgroundPosition: `${
-                      ((tile % size) * 100) / (size - 1)
-                    }% ${(Math.floor(tile / size) * 100) / (size - 1)}%`,
+                      (((tile - 1) % size) * 100) / (size - 1)
+                    }% ${(Math.floor((tile - 1) / size) * 100) / (size - 1)}%`,
                   }
                 : {}
             }
-            aria-label={tile === total - 1 ? "empty" : `tile ${tile + 1}`}
+            aria-label={tile === null ? "empty" : `tile ${tile}`}
           >
-            {tile !== total - 1 ? "" : ""}
+            {tile !== null ? "" : ""}
           </button>
         ))}
       </div>
