@@ -289,96 +289,82 @@ function SnakeGame({ updateStats }) {
         {!gameOver && !paused && <span className="score">Score: {score}</span>}
       </div>
 
-      <div
-        className="snake-board"
-        style={{
-          width: GRID_SIZE * CELL_SIZE,
-          height: GRID_SIZE * CELL_SIZE,
-          display: "grid",
-          gridTemplateColumns: `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`,
-          margin: "0 auto",
-          border: "3px solid #333",
-          background: "#f0f0f0",
-          position: "relative",
-          boxShadow: "0 6px 16px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        {/* Draw food */}
+      <div className="game-layout">
         <div
+          className="snake-board"
           style={{
-            position: "absolute",
-            left: food.x * CELL_SIZE + 5,
-            top: food.y * CELL_SIZE + 5,
-            width: CELL_SIZE - 10,
-            height: CELL_SIZE - 10,
-            backgroundColor: "#ff3d00",
-            borderRadius: "50%",
-            boxShadow: "0 0 8px rgba(255, 61, 0, 0.6)",
+            width: GRID_SIZE * CELL_SIZE,
+            height: GRID_SIZE * CELL_SIZE,
+            display: "grid",
+            gridTemplateColumns: `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`,
+            border: "3px solid #333",
+            background: "#f0f0f0",
+            position: "relative",
+            boxShadow: "0 6px 16px rgba(0, 0, 0, 0.2)",
           }}
-        />
-
-        {/* Draw snake */}
-        {snake.map((segment, index) => (
+        >
+          {/* Draw food */}
           <div
-            key={index}
             style={{
               position: "absolute",
-              left: segment.x * CELL_SIZE + (index === 0 ? 3 : 4),
-              top: segment.y * CELL_SIZE + (index === 0 ? 3 : 4),
-              width: index === 0 ? CELL_SIZE - 6 : CELL_SIZE - 8,
-              height: index === 0 ? CELL_SIZE - 6 : CELL_SIZE - 8,
-              backgroundColor: index === 0 ? "#2e7d32" : "#4caf50", // Head is darker
-              border: index === 0 ? "1px solid #1b5e20" : "none",
-              borderRadius: index === 0 ? "4px" : "2px",
-              boxShadow: index === 0 ? "0 0 5px rgba(0, 0, 0, 0.2)" : "none",
+              left: food.x * CELL_SIZE + 5,
+              top: food.y * CELL_SIZE + 5,
+              width: CELL_SIZE - 10,
+              height: CELL_SIZE - 10,
+              backgroundColor: "#ff3d00",
+              borderRadius: "50%",
+              boxShadow: "0 0 8px rgba(255, 61, 0, 0.6)",
             }}
           />
-        ))}
-      </div>
 
-      {/* Controls for mobile/touch */}
-      <div className="touch-controls">
-        <div className="direction-buttons">
-          <button onClick={() => handleDirectionButton(DIRECTIONS.UP)}>
-            ↑
-          </button>
-          <div className="horizontal-buttons">
-            <button onClick={() => handleDirectionButton(DIRECTIONS.LEFT)}>
-              ←
+          {/* Draw snake */}
+          {snake.map((segment, index) => (
+            <div
+              key={index}
+              style={{
+                position: "absolute",
+                left: segment.x * CELL_SIZE + (index === 0 ? 3 : 4),
+                top: segment.y * CELL_SIZE + (index === 0 ? 3 : 4),
+                width: index === 0 ? CELL_SIZE - 6 : CELL_SIZE - 8,
+                height: index === 0 ? CELL_SIZE - 6 : CELL_SIZE - 8,
+                backgroundColor: index === 0 ? "#2e7d32" : "#4caf50", // Head is darker
+                border: index === 0 ? "1px solid #1b5e20" : "none",
+                borderRadius: index === 0 ? "4px" : "2px",
+                boxShadow: index === 0 ? "0 0 5px rgba(0, 0, 0, 0.2)" : "none",
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Controls for mobile/touch - now on the right side */}
+        <div className="side-controls">
+          <div className="touch-controls">
+            <div className="direction-buttons">
+              <button onClick={() => handleDirectionButton(DIRECTIONS.UP)}>
+                ↑
+              </button>
+              <div className="horizontal-buttons">
+                <button onClick={() => handleDirectionButton(DIRECTIONS.LEFT)}>
+                  ←
+                </button>
+                <button onClick={() => handleDirectionButton(DIRECTIONS.RIGHT)}>
+                  →
+                </button>
+              </div>
+              <button onClick={() => handleDirectionButton(DIRECTIONS.DOWN)}>
+                ↓
+              </button>
+            </div>
+          </div>
+
+          <div className="game-controls">
+            <button onClick={() => setPaused(!paused)}>
+              {paused ? "Resume" : "Pause"}
             </button>
-            <button onClick={() => handleDirectionButton(DIRECTIONS.RIGHT)}>
-              →
+            <button onClick={resetGame} disabled={!gameOver && !paused}>
+              {gameOver ? "Play Again" : "Restart"}
             </button>
           </div>
-          <button onClick={() => handleDirectionButton(DIRECTIONS.DOWN)}>
-            ↓
-          </button>
-        </div>
-      </div>
-
-      <div className="game-controls">
-        <button onClick={() => setPaused(!paused)}>
-          {paused ? "Resume" : "Pause"}
-        </button>
-        <button onClick={resetGame} disabled={!gameOver && !paused}>
-          {gameOver ? "Play Again" : "Restart"}
-        </button>
-      </div>
-
-      <div className="snake-info-section">
-        <div className="instructions">
-          <h3>How to Play</h3>
-          <ul>
-            <li>Use arrow keys to move the snake</li>
-            <li>Eat red food to grow longer and earn points</li>
-            <li>Avoid hitting the walls or yourself</li>
-            <li>Press spacebar to pause/resume</li>
-            <li>Press 'r' to restart when game is over</li>
-          </ul>
-        </div>
-        <div className="snake-legend">
-          <h3>Game Stats</h3>
-          <p>View your current score, high score, and snake length in the status bar.</p>
         </div>
       </div>
     </div>
