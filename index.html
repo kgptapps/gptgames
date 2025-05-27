@@ -8,10 +8,22 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Kannaiyan's Copilot Games</title>
-    <script type="module" src="./refresh.js"></script>
+    <script>
+      // Force refresh if needed
+      const timestamp = new Date().getTime();
+      if (!sessionStorage.getItem('pageLoadTimestamp') || 
+          parseInt(sessionStorage.getItem('pageLoadTimestamp')) < timestamp - 300000) {
+        sessionStorage.setItem('pageLoadTimestamp', timestamp);
+        if (!window.location.search.includes('t=')) {
+          window.location.search = window.location.search ? 
+            window.location.search + '&t=' + timestamp : 
+            't=' + timestamp;
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
